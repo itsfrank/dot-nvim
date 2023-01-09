@@ -102,6 +102,7 @@ require('packer').startup(function(use)
         cmd = 'CodeActionMenu',
     }
 
+    use { 'joechrisellis/lsp-format-modifications.nvim' }
     -- end packer plugin list
 
     -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
@@ -279,6 +280,11 @@ require('telescope').setup {
 vim.keymap.set('n', '<leader>cs', ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
 vim.keymap.set('n', '<leader>ls', '^', { desc = "[L]ine [S]tart" })
 vim.keymap.set('n', '<leader>le', '$', { desc = "[L]ine [E]nd" })
+vim.keymap.set('v', '<leader>ls', '^', { desc = "[L]ine [S]tart" })
+vim.keymap.set('v', '<leader>le', '$', { desc = "[L]ine [E]nd" })
+vim.keymap.set('n', '<leader>fta', ':Format<cr>', { desc = "[F]orma[T] [A]ll - formats enire buffer" })
+vim.keymap.set('n', '<leader>ftm', ':FormatModifications<cr>',
+    { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" })
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
@@ -402,12 +408,8 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
-    -- NOTE: Remember that lua is a real programming language, and as such it is possible
-    -- to define small helper and utility functions so you don't have to repeat yourself
-    -- many times.
-    --
-    -- In this case, we create a function that lets us more easily define mappings specific
+local on_attach = function(client, bufnr)
+    -- lets us more easily define mappings specific
     -- for LSP related items. It sets the mode, buffer and description for us each time.
     local nmap = function(keys, func, desc)
         if desc then
@@ -444,6 +446,9 @@ local on_attach = function(_, bufnr)
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
         vim.lsp.buf.format()
     end, { desc = 'Format current buffer with LSP' })
+    -- Adds command `:FormatModifications`
+    local lsp_format_modifications = require "lsp-format-modifications"
+    lsp_format_modifications.attach(client, bufnr, { format_on_save = true })
 end
 
 -- Enable the following language servers
