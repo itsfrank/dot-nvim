@@ -40,8 +40,11 @@ require('packer').startup(function(use)
 
     -- fzf stuff cause telesope is slow on game engine
     use { 'junegunn/fzf', run = './install --bin', } -- fzf
-    use {
-        'ibhagwan/fzf-lua',
+    use { 'junegunn/fzf.vim' } -- fzf vim plugin
+
+    -- fzf extension for telescope
+    use { 'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
     }
 
     use { -- Autocompletion
@@ -254,7 +257,7 @@ require('gitsigns').setup {
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
     defaults = {
-        path_display = { "smart" },
+        -- path_display = { "smart" },
         mappings = {
             i = {
                 ["<C-h>"] = "which_key",
@@ -263,6 +266,21 @@ require('telescope').setup {
                 ["<C-h>"] = "which_key",
             },
         },
+        pickers = {
+            find_files = {
+                find_command = {
+                    'fd',
+                    '--type',
+                    'file',
+                    '--type',
+                    'symlink',
+                    '--hidden',
+                    '--exclude',
+                    '.git',
+                    -- put your other patterns here
+                }
+            }
+        },
     },
     extensions = {
         file_browser = {
@@ -270,12 +288,34 @@ require('telescope').setup {
             hidden = true,
         },
         fzf = {
+            fuzzy = true, -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
             override_file_sorter = true, -- override the file sorter
+            case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+            -- the default case_mode is "smart_case"
         },
     },
 }
 
+-- fzf config
+vim.fn.setenv("FZF_DEFAULT_OPTS",
+    "--ansi --layout reverse --margin=1,4 --preview 'bat --color=always --style=header,grid --line-range :300 {}'")
+vim.g.fzf_layout = { up = '~90%', window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = 'sharp' } }
+vim.g.fzf_colors = {
+    ['fg'] = { 'fg', 'Normal' },
+    ['bg'] = { 'bg', 'Normal' },
+    ['hl'] = { 'fg', 'Comment' },
+    ['fg+'] = { 'fg', 'CursorLine', 'CursorColumn', 'Normal' },
+    ['bg+'] = { 'bg', 'CursorLine', 'CursorColumn' },
+    ['hl+'] = { 'fg', 'Statement' },
+    ['info'] = { 'fg', 'PreProc' },
+    ['border'] = { 'fg', 'Ignore' },
+    ['prompt'] = { 'fg', 'Conditional' },
+    ['pointer'] = { 'fg', 'Exception' },
+    ['marker'] = { 'fg', 'Keyword' },
+    ['spinner'] = { 'fg', 'Label' },
+    ['header'] = { 'fg', 'Comment' }
+}
 -- Franks keymaps
 vim.keymap.set('n', '<leader>cs', ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
 vim.keymap.set('n', '<leader>ls', '^', { desc = "[L]ine [S]tart" })
@@ -287,7 +327,7 @@ vim.keymap.set('n', '<leader>ftm', ':FormatModifications<cr>',
     { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" })
 
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+require('telescope').load_extension('fzf')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -303,7 +343,7 @@ end, { desc = '[/] Fuzzily search in current buffer]' })
 
 -- using fzf to find files instead of telescope
 -- vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sf', ':FzfLua files<cr>', { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sf', ':Files<cr>', { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -501,7 +541,7 @@ mason_lspconfig.setup_handlers {
 -- setup workspaces
 require("workspaces").setup({
     hooks = {
-        open = { "FzfLua files" },
+        open = { "Files" },
     }
 })
 
