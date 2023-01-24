@@ -300,7 +300,7 @@ require('telescope').setup {
 -- fzf config
 vim.fn.setenv("FZF_DEFAULT_OPTS",
     "--ansi --layout reverse --margin=1,4 --preview 'bat --color=always --style=header,grid --line-range :300 {}'")
-vim.g.fzf_layout = { up = '~90%', window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = 'sharp' } }
+vim.g.fzf_layout = { up = '~90%', window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5 } }
 vim.g.fzf_colors = {
     ['fg'] = { 'fg', 'Normal' },
     ['bg'] = { 'bg', 'Normal' },
