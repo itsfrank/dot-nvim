@@ -126,6 +126,9 @@ local footer_config_status = {
     type = 'text', val = ' checking config status', opts = { position = 'center', hl = hl_blue }
 }
 
+local footer_uncommitted_status = {
+    type = 'text', val = '', opts = { position = 'center', hl = hl_yellow }
+}
 local config = {
     layout = {
         { type = 'padding', val = 2 },
@@ -140,6 +143,7 @@ local config = {
         footer_plugins,
         { type = 'padding', val = 1 },
         footer_config_status,
+        footer_uncommitted_status,
     },
     opts = {
         noautocmd = false,
@@ -156,7 +160,6 @@ config_version_check:after(vim.schedule_wrap(function()
     local behind_string = result.behind
     local ahead_string = result.ahead
 
-    print('git check after fn running [' .. ahead_string .. ',' .. behind_string .. ']')
     if ahead > 0 and behind > 0 then
         footer_config_status.val = ' config [ ahead | behind ] by [ ' ..
             ahead_string .. ' | ' .. behind_string .. ' ] commits'
@@ -170,6 +173,10 @@ config_version_check:after(vim.schedule_wrap(function()
     else
         footer_config_status.val = ' config up-to-date'
     end
+    if result.has_uncommitted then
+        footer_uncommitted_status.val = '  config has uncommitted changes'
+    end
     alpha.redraw()
 end))
+
 config_version_check:start()

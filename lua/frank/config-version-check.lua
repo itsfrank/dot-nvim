@@ -27,26 +27,37 @@ module.ahead_job = Job:new({
     },
 })
 
+module.status_job = Job:new({
+    command = 'git',
+    args = {
+        'status',
+        '--short',
+    },
+})
 module.fetch_job:and_then(module.behind_job)
 module.behind_job:and_then(module.ahead_job)
 
 function module.sync(self)
     self.fetch_job:sync()
+    self.status_job:sync()
 end
 
 function module.start(self)
     self.fetch_job:start()
+    self.status_job:start()
 end
 
 function module.wait(self)
     self.behind_job:wait()
     self.ahead_job:wait()
+    self.status_job:wait()
 end
 
 function module.result(self)
     return {
         ahead = self.ahead_job:result()[1],
         behind = self.behind_job:result()[1],
+        has_uncommitted = #self.status_job:result() > 0,
     }
 end
 
