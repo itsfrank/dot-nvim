@@ -90,14 +90,22 @@ local quick_link_btns = {
     }
 }
 
+local config_paths = {
+    neovim = '~/.config/nvim/',
+    wezterm = '~/.config/wezterm/',
+}
+
+if vim.fn.has('win32') then
+    config_paths.neovim = 'C:\\Users\\fobrien\\AppData\\Local\\nvim'
+end
 local config_btns = {
     type = 'group',
     val = {
         { type = 'text', val = 'CONFIGS', opts = { hl = hl_blue, position = 'center' } },
         { type = 'padding', val = 1 },
         button('SPC c', '  Config Files', ':cd ~/.config<CR> :Telescope file_browser<CR>'),
-        button('SPC c 1', '    Neovim', ':cd ~/.config/nvim/<CR> :e init.lua<CR>'),
-        button('SPC c 2', '    Wezterm', ':cd ~/.config/wezterm/<CR> :e wezterm.lua<CR>'),
+        button('SPC c 1', '    Neovim', ':cd ' .. config_paths.neovim .. '<CR> :e init.lua<CR>'),
+        button('SPC c 2', '    Wezterm', ':cd ' .. config_paths.wezterm .. '<CR> :e wezterm.lua<CR>'),
     },
     opts = {
         position = 'center',
