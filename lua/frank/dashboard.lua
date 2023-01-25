@@ -172,6 +172,7 @@ config_version_check:after(vim.schedule_wrap(function()
         footer_config_status.opts.hl = hl_red
     else
         footer_config_status.val = ' config up-to-date'
+        footer_config_status.opts.hl = hl_green
     end
     if result.has_uncommitted then
         footer_uncommitted_status.val = '  config has uncommitted changes'
