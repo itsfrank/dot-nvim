@@ -119,13 +119,6 @@ require('packer').startup(function(use)
     end
 end)
 
--- Frank's config git info script
-print('requiring version check')
-local check_version = require('frank.config-version-check')
-check_version:sync()
-check_version:wait()
-local check_res = check_version:result()
-print("Config ahead/behind:", check_res.ahead, check_res.behind)
 -- When we are bootstrapping a configuration, it doesn't
 -- make sense to execute the rest of the init.lua.
 --

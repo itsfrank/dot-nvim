@@ -9,8 +9,10 @@ local neovim_ascii = {
 
 local alpha = require('alpha')
 local max_width = 55
-local hl1 = 'String'
-local hl2 = 'Label'
+local hl_green = 'String'
+local hl_blue = 'Label'
+local hl_yellow = 'Type'
+local hl_red = 'Error'
 
 local function get_plugins_list()
     local short_name = require('packer.util').get_plugin_short_name
@@ -40,7 +42,7 @@ local function button(sc, txt, keybind, keybind_opts)
         width = max_width,
         align_shortcut = 'right',
         hl_shortcut = 'Normal',
-        hl = hl2
+        hl = hl_green
     }
 
     if keybind then
@@ -68,7 +70,7 @@ local header = {
     opts = {
         position = 'center',
         type = 'ascii',
-        hl = hl1,
+        hl = hl_blue,
     }
 }
 
@@ -76,14 +78,14 @@ local header = {
 local quick_link_btns = {
     type = 'group',
     val = {
-        { type = 'text', val = 'QUICK LINKS', opts = { hl = hl1, position = 'center' } },
+        { type = 'text', val = 'QUICK LINKS', opts = { hl = hl_blue, position = 'center' } },
         { type = 'padding', val = 1 },
         button('SPC n f', '  New File', ':ene <BAR> startinsert<CR>'),
         button('SPC f b', '  File Browser', ':Telescope file_browser<CR>'),
         button('SPC w k', '  Workspaces', ':Telescope workspaces<CR>'),
     },
     opts = {
-        hl = hl2,
+        hl = hl_green,
         position = 'center'
     }
 }
@@ -91,7 +93,7 @@ local quick_link_btns = {
 local config_btns = {
     type = 'group',
     val = {
-        { type = 'text', val = 'CONFIGS', opts = { hl = hl1, position = 'center' } },
+        { type = 'text', val = 'CONFIGS', opts = { hl = hl_blue, position = 'center' } },
         { type = 'padding', val = 1 },
         button('SPC c', '  Config Files', ':cd ~/.config<CR> :Telescope file_browser<CR>'),
         button('SPC c 1', '    Neovim', ':cd ~/.config/nvim/<CR> :e init.lua<CR>'),
@@ -99,7 +101,7 @@ local config_btns = {
     },
     opts = {
         position = 'center',
-        hl = hl2
+        hl = hl_green
     }
 }
 
@@ -116,13 +118,12 @@ local misc_btns = {
 -- Footer
 local plugins = get_plugins_list()
 
-local footer1 = {
-    type = 'text',
-    val = '  ' .. (#plugins) .. ' plugins installed',
-    opts = {
-        position = 'center',
-        hl = hl1
-    }
+local footer_plugins = {
+    type = 'text', val = '  ' .. (#plugins) .. ' plugins installed', opts = { position = 'center', hl = hl_blue }
+}
+
+local footer_config_status = {
+    type = 'text', val = ' checking config status', opts = { position = 'center', hl = hl_blue }
 }
 
 local config = {
@@ -136,7 +137,9 @@ local config = {
         { type = 'padding', val = 2 },
         misc_btns,
         { type = 'padding', val = 3 },
-        footer1,
+        footer_plugins,
+        { type = 'padding', val = 1 },
+        footer_config_status,
     },
     opts = {
         noautocmd = false,
@@ -145,3 +148,28 @@ local config = {
 }
 
 alpha.setup(config)
+local config_version_check = require('frank.config-version-check')
+config_version_check:after(vim.schedule_wrap(function()
+    local result = config_version_check:result()
+    local behind = tonumber(result.behind)
+    local ahead = tonumber(result.ahead)
+    local behind_string = result.behind
+    local ahead_string = result.ahead
+
+    print('git check after fn running [' .. ahead_string .. ',' .. behind_string .. ']')
+    if ahead > 0 and behind > 0 then
+        footer_config_status.val = ' config [ ahead | behind ] by [ ' ..
+            ahead_string .. ' | ' .. behind_string .. ' ] commits'
+        footer_config_status.opts.hl = hl_red
+    elseif ahead > 0 then
+        footer_config_status.val = ' config ahead by ' .. ahead_string .. ' commits'
+        footer_config_status.opts.hl = hl_yellow
+    elseif behind > 0 then
+        footer_config_status.val = ' config behind by ' .. behind_string .. ' commits'
+        footer_config_status.opts.hl = hl_red
+    else
+        footer_config_status.val = ' config up-to-date'
+    end
+    alpha.redraw()
+end))
+config_version_check:start()

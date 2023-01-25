@@ -22,13 +22,13 @@ module.ahead_job = Job:new({
     command = 'git',
     args = {
         'rev-list',
-        'HEAD..origin/main',
+        'origin/main..HEAD',
         '--count',
     },
 })
 
 module.fetch_job:and_then(module.behind_job)
-module.fetch_job:and_then(module.ahead_job)
+module.behind_job:and_then(module.ahead_job)
 
 function module.sync(self)
     self.fetch_job:sync()
@@ -50,4 +50,7 @@ function module.result(self)
     }
 end
 
+function module.after(self, fn)
+    self.ahead_job:after(fn)
+end
 return module
