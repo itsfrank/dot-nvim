@@ -4,7 +4,7 @@ local is_bootstrap = false
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     is_bootstrap = true
     vim.fn.system { 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path }
-    vim.cmd [[packadd packer.nvim]]
+    vim.cmd('packadd packer.nvim')
 end
 
 require('packer').startup(function(use)
@@ -184,11 +184,10 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 if vim.fn.has('win32') then
     vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
-vim.opt.undofile = true
 else
     vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-    vim.opt.undofile = true
 end
+vim.opt.undofile = true
 
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
@@ -304,23 +303,35 @@ require('telescope').setup {
 
 -- fzf config
 vim.fn.setenv("FZF_DEFAULT_OPTS",
-    "--ansi --layout reverse --margin=1,4 --preview 'bat --color=always --style=header,grid --line-range :300 {}'")
-vim.g.fzf_layout = { up = '~90%', window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5 } }
-vim.g.fzf_colors = {
-    ['fg'] = { 'fg', 'Normal' },
-    ['bg'] = { 'bg', 'Normal' },
-    ['hl'] = { 'fg', 'Comment' },
-    ['fg+'] = { 'fg', 'CursorLine', 'CursorColumn', 'Normal' },
-    ['bg+'] = { 'bg', 'CursorLine', 'CursorColumn' },
-    ['hl+'] = { 'fg', 'Statement' },
-    ['info'] = { 'fg', 'PreProc' },
-    ['border'] = { 'fg', 'Ignore' },
-    ['prompt'] = { 'fg', 'Conditional' },
-    ['pointer'] = { 'fg', 'Exception' },
-    ['marker'] = { 'fg', 'Keyword' },
-    ['spinner'] = { 'fg', 'Label' },
-    ['header'] = { 'fg', 'Comment' }
-}
+    "--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' ")
+vim.g.fzf_layout = { up = '~90%',
+    window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = 'rounded' } }
+
+-- for xome reason fzfz_colors isnt working on my windows PC, so I deen to do this
+if vim.fn.has('win32') then
+    -- thes eoptions will need to be re-generated when colorscheme is changed
+    -- on a machione where fzf_colors works do: `:echo fzf#wrap().options`
+    vim.fn.setenv("FZF_DEFAULT_OPTS", os.getenv("FZF_DEFAULT_OPTS") .. " " ..
+        "--color=bg+:#2a2b3c,bg:#1e1e2e,spinner:#74c7ec,hl:#585b70 " ..
+        "--color=fg:#cdd6f4,pointer:#cba6f7,info:#f5c2e7,header:#585b70 " ..
+        "--color=marker:#cba6f7,fg+:#cdd6f4,prompt:#cba6f7,hl+:#cba6f7")
+else
+    vim.g.fzf_colors = {
+        ['fg'] = { 'fg', 'Normal' },
+        ['bg'] = { 'bg', 'Normal' },
+        ['hl'] = { 'fg', 'Comment' },
+        ['fg+'] = { 'fg', 'CursorLine', 'CursorColumn', 'Normal' },
+        ['bg+'] = { 'bg', 'CursorLine', 'CursorColumn' },
+        ['hl+'] = { 'fg', 'Statement' },
+        ['info'] = { 'fg', 'PreProc' },
+        ['border'] = { 'fg', 'Normal' },
+        ['prompt'] = { 'fg', 'Conditional' },
+        ['pointer'] = { 'fg', 'Exception' },
+        ['marker'] = { 'fg', 'Keyword' },
+        ['spinner'] = { 'fg', 'Label' },
+        ['header'] = { 'fg', 'Comment' }
+    }
+end
 -- Franks keymaps
 vim.keymap.set('n', '<leader>cs', ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
 vim.keymap.set('n', '<leader>ls', '^', { desc = "[L]ine [S]tart" })
@@ -386,7 +397,7 @@ vim.cmd('autocmd! TermOpen term://*toggleterm#* lua SetTerminalKeymaps()')
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'vim', 'help' },
 
     highlight = { enable = true },
     indent = { enable = true, disable = { 'python' } },
