@@ -58,8 +58,6 @@ function module.wait(self)
 end
 
 function module.result(self)
-    print(self.status_job:result())
-    for k, v in pairs(self.status_job:result()) do print(k, v) end
     return {
         ahead = self.ahead_job:result()[1],
         behind = self.behind_job:result()[1],
@@ -68,7 +66,7 @@ function module.result(self)
 end
 
 function module.after(self, fn)
-    self.ahead_job:after(fn)
+    self.status_job:after(fn)
 end
 
 return module
