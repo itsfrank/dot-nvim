@@ -1,3 +1,4 @@
+local os_info = require('frank.os-info')
 local neovim_ascii = {
     [[                               __                ]],
     [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
@@ -94,10 +95,10 @@ local config_paths = {
     neovim = '~/.config/nvim/',
     wezterm = '~/.config/wezterm/',
 }
-
-if vim.fn.has('win32') then
+if os_info:is_windows() then
     config_paths.neovim = 'C:\\Users\\fobrien\\AppData\\Local\\nvim'
 end
+
 local config_btns = {
     type = 'group',
     val = {

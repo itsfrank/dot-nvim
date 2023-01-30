@@ -140,6 +140,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     pattern = vim.fn.expand '$MYVIMRC',
 })
 
+local os_info = require('frank.os-info')
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
@@ -182,9 +183,9 @@ vim.opt.wrap = false
 
 vim.opt.swapfile = false
 vim.opt.backup = false
-if vim.fn.has('win32') then
+if os_info:is_windows() then
     vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
-else
+elseif os_info:is_mac() or os_info:is_linux() then
     vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 end
 vim.opt.undofile = true
@@ -308,14 +309,14 @@ vim.g.fzf_layout = { up = '~90%',
     window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = 'rounded' } }
 
 -- for xome reason fzfz_colors isnt working on my windows PC, so I deen to do this
-if vim.fn.has('win32') then
+if os_info:is_windows() then
     -- thes eoptions will need to be re-generated when colorscheme is changed
     -- on a machione where fzf_colors works do: `:echo fzf#wrap().options`
     vim.fn.setenv("FZF_DEFAULT_OPTS", os.getenv("FZF_DEFAULT_OPTS") .. " " ..
         "--color=bg+:#2a2b3c,bg:#1e1e2e,spinner:#74c7ec,hl:#585b70 " ..
         "--color=fg:#cdd6f4,pointer:#cba6f7,info:#f5c2e7,header:#585b70 " ..
         "--color=marker:#cba6f7,fg+:#cdd6f4,prompt:#cba6f7,hl+:#cba6f7")
-else
+elseif os_info:is_mac() or os_info:is_linux() then
     vim.g.fzf_colors = {
         ['fg'] = { 'fg', 'Normal' },
         ['bg'] = { 'bg', 'Normal' },
