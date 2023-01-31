@@ -160,33 +160,36 @@ local config = {
     }
 }
 
-alpha.setup(config)
 local config_version_check = require('frank.config-version-check')
-config_version_check:after(vim.schedule_wrap(function()
-    local result = config_version_check:result()
-    local behind = tonumber(result.behind)
-    local ahead = tonumber(result.ahead)
-    local behind_string = result.behind
-    local ahead_string = result.ahead
+config.opts.setup = function()
+    config_version_check:after(vim.schedule_wrap(function()
+        local result = config_version_check:result()
+        local behind = tonumber(result.behind)
+        local ahead = tonumber(result.ahead)
+        local behind_string = result.behind
+        local ahead_string = result.ahead
 
-    if ahead > 0 and behind > 0 then
-        footer_config_status.val = ' config [ ahead | behind ] by [ ' ..
-            ahead_string .. ' | ' .. behind_string .. ' ] commits'
-        footer_config_status.opts.hl = hl_red
-    elseif ahead > 0 then
-        footer_config_status.val = ' config ahead by ' .. ahead_string .. ' commits'
-        footer_config_status.opts.hl = hl_yellow
-    elseif behind > 0 then
-        footer_config_status.val = ' config behind by ' .. behind_string .. ' commits'
-        footer_config_status.opts.hl = hl_red
-    else
-        footer_config_status.val = ' config up-to-date'
-        footer_config_status.opts.hl = hl_green
-    end
-    if result.has_uncommitted then
-        footer_uncommitted_status.val = '  config has uncommitted changes'
-    end
-    alpha.redraw()
-end))
+        if ahead > 0 and behind > 0 then
+            footer_config_status.val = ' config [ ahead | behind ] by [ ' ..
+                ahead_string .. ' | ' .. behind_string .. ' ] commits'
+            footer_config_status.opts.hl = hl_red
+        elseif ahead > 0 then
+            footer_config_status.val = ' config ahead by ' .. ahead_string .. ' commits'
+            footer_config_status.opts.hl = hl_yellow
+        elseif behind > 0 then
+            footer_config_status.val = ' config behind by ' .. behind_string .. ' commits'
+            footer_config_status.opts.hl = hl_red
+        else
+            footer_config_status.val = ' config up-to-date'
+            footer_config_status.opts.hl = hl_green
+        end
+        if result.has_uncommitted then
+            footer_uncommitted_status.val = '  config has uncommitted changes'
+        end
+        alpha.redraw()
+    end))
 
-config_version_check:start()
+    config_version_check:start()
+end
+
+alpha.setup(config)
