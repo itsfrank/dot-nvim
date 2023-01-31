@@ -342,6 +342,16 @@ vim.keymap.set('n', '<leader>fta', ':Format<cr>', { desc = "[F]orma[T] [A]ll - f
 vim.keymap.set('n', '<leader>ftm', ':FormatModifications<cr>',
     { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" })
 
+-- system clipboard keymaps
+vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Yank to system cpliboar' })
+vim.keymap.set('n', '<leader>Y', '"+yg_', { desc = 'Yank to system cpliboar' })
+vim.keymap.set('n', '<leader>y', '"+y', { desc = 'Yank to system cpliboar' })
+vim.keymap.set('n', '<leader>yy', '"+yy', { desc = 'Yank to system cpliboar' })
+vim.keymap.set('n', '<leader>p', '"+p', { desc = 'Paste from system clipboar' })
+vim.keymap.set('n', '<leader>P', '"+P', { desc = 'Paste from system clipboar' })
+vim.keymap.set('v', '<leader>p', '"+p', { desc = 'Paste from system clipboar' })
+vim.keymap.set('v', '<leader>P', '"+P', { desc = 'Paste from system clipboar' })
+vim.keymap.set('t', '<c-p>', '<c-\\><c-n>pi', { desc = 'Paste in terminal mode' })
 -- Enable telescope fzf native, if installed
 require('telescope').load_extension('fzf')
 
