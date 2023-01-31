@@ -38,6 +38,8 @@ require('packer').startup(function(use)
         config = 'require("frank.dashboard")'
     }
 
+    -- better git diffview
+    use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
     -- fzf stuff cause telesope is slow on game engine
     use { 'junegunn/fzf', run = './install --bin', } -- fzf
     use { 'junegunn/fzf.vim' } -- fzf vim plugin
