@@ -49,6 +49,19 @@ require('packer').startup(function(use)
         run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
     }
 
+    -- improved search & replace (and othe rufn stuff)
+    use {'smjonas/live-command.nvim',
+        config=function()
+            require("live-command").setup {
+                commands = {
+                    S = { cmd = "Subvert"}, -- must be defined before we import vim-abolish
+                },
+            }
+        end
+    }
+
+    use { 'tpope/vim-abolish' }
+
     use { -- Autocompletion
         'hrsh7th/nvim-cmp',
         requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
@@ -305,6 +318,7 @@ require('telescope').setup {
 }
 
 -- fzf config
+vim.fn.setenv("FZF_DEFAULT_COMMAND", 'fd --type f --color=always')
 vim.fn.setenv("FZF_DEFAULT_OPTS",
     "--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' ")
 vim.g.fzf_layout = { up = '~90%',
@@ -395,17 +409,10 @@ vim.keymap.set('n', '<leader>`v', ":ToggleTerm direction=vertical <cr>", { desc 
 vim.keymap.set('n', '<leader>`h', ":ToggleTerm direction=horizontal <cr>", { desc = "Toggle [V]ertical terminal view" })
 vim.keymap.set('n', '<leader>`f', ":ToggleTerm direction=float <cr>", { desc = "Toggle [F]loat terminal view" })
 
-function SetTerminalKeymaps()
-    local opts = { buffer = 0 }
-    vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
-    vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
-    vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
-    vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
-    vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
-end
-
--- if you only want these mappings for toggle term use term://*toggleterm#* instead
-vim.cmd('autocmd! TermOpen term://*toggleterm#* lua SetTerminalKeymaps()')
+vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -530,6 +537,7 @@ local servers = {
     clangd = {},
     -- gopls = {},
     -- pyright = {},
+    pyright = {},
     rust_analyzer = {},
     -- tsserver = {},
 
@@ -591,7 +599,8 @@ cmp.setup {
     mapping = cmp.mapping.preset.insert {
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
+        -- ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-s>'] = cmp.mapping.complete(),
         ['<CR>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
