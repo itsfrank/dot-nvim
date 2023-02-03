@@ -44,11 +44,6 @@ require('packer').startup(function(use)
     use { 'junegunn/fzf', run = './install --bin', } -- fzf
     use { 'junegunn/fzf.vim' } -- fzf vim plugin
 
-    -- fzf extension for telescope
-    use { 'nvim-telescope/telescope-fzf-native.nvim',
-        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-    }
-
     use { -- Autocompletion
         'hrsh7th/nvim-cmp',
         requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
@@ -355,8 +350,6 @@ vim.keymap.set('n', '<leader>P', '"+P', { desc = 'Paste from system clipboar' })
 vim.keymap.set('v', '<leader>p', '"+p', { desc = 'Paste from system clipboar' })
 vim.keymap.set('v', '<leader>P', '"+P', { desc = 'Paste from system clipboar' })
 vim.keymap.set('t', '<c-p>', '<c-\\><c-n>pi', { desc = 'Paste in terminal mode' })
--- Enable telescope fzf native, if installed
-require('telescope').load_extension('fzf')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
