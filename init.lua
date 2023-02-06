@@ -160,6 +160,8 @@ vim.o.hlsearch = true
 -- Make line numbers default
 vim.wo.number = true
 
+-- highlight line cursor is on
+vim.o.cursorline = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -177,6 +179,10 @@ vim.wo.signcolumn = 'yes'
 -- Set colorscheme
 vim.o.termguicolors = true
 vim.cmd.colorscheme "catppuccin"
+
+-- override cursor line nr so its the same color as other colors, otherwise with cursorline its distracting
+local line_nr_color = vim.api.nvim_get_hl_by_name('LineNr', true)
+vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = line_nr_color.foreground })
 
 -- from primeagen
 vim.opt.nu = true
@@ -200,7 +206,6 @@ elseif os_info:is_mac() or os_info:is_linux() then
 end
 vim.opt.undofile = true
 
-vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 vim.opt.scrolloff = 8
@@ -275,6 +280,8 @@ require('telescope').setup {
         -- path_display = { "smart" },
         mappings = {
             i = {
+                ["<C-j>"] = "move_selection_next",
+                ["<C-k>"] = "move_selection_previous",
                 ["<C-h>"] = "which_key",
             },
             n = {
@@ -347,9 +354,9 @@ end
 -- Franks keymaps
 vim.keymap.set('n', '<leader>cs', ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
 vim.keymap.set('n', '<leader>ls', '^', { desc = "[L]ine [S]tart" })
-vim.keymap.set('n', '<leader>le', '$', { desc = "[L]ine [E]nd" })
+vim.keymap.set('n', '<leader>le', 'g_', { desc = "[L]ine [E]nd" })
 vim.keymap.set('v', '<leader>ls', '^', { desc = "[L]ine [S]tart" })
-vim.keymap.set('v', '<leader>le', '$', { desc = "[L]ine [E]nd" })
+vim.keymap.set('v', '<leader>le', 'g_', { desc = "[L]ine [E]nd" })
 vim.keymap.set('n', '<leader>fta', ':Format<cr>', { desc = "[F]orma[T] [A]ll - formats enire buffer" })
 vim.keymap.set('n', '<leader>ftm', ':FormatModifications<cr>',
     { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" })
@@ -402,10 +409,11 @@ vim.keymap.set('n', '<leader>`v', ":ToggleTerm direction=vertical <cr>", { desc 
 vim.keymap.set('n', '<leader>`h', ":ToggleTerm direction=horizontal <cr>", { desc = "Toggle [V]ertical terminal view" })
 vim.keymap.set('n', '<leader>`f', ":ToggleTerm direction=float <cr>", { desc = "Toggle [F]loat terminal view" })
 
-vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
-vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
-vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
-vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+vim.keymap.set('t', '<C-space>', '<C-\\><C-n>')
+vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]])
+vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]])
+vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]])
+vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]])
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -544,7 +552,7 @@ local servers = {
 
 -- Setup neovim lua configuration
 require('neodev').setup()
---
+
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -620,5 +628,8 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+    },
+    view = {
+        entries = { name = 'custom', selection_order = 'bottom_up' }
     },
 }
