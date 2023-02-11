@@ -44,16 +44,19 @@ require('packer').startup(function(use)
     use { 'junegunn/fzf', run = './install --bin', } -- fzf
     use { 'junegunn/fzf.vim' } -- fzf vim plugin
 
-    -- improved search & replace (and othe rufn stuff)
-    use {'smjonas/live-command.nvim',
-        config=function()
+    -- improved search & replace (and other fun stuff)
+    use { 'smjonas/live-command.nvim',
+        config = function()
             require("live-command").setup {
                 commands = {
-                    S = { cmd = "Subvert"}, -- must be defined before we import vim-abolish
+                    S = { cmd = "Subvert" }, -- must be defined before we import vim-abolish
                 },
             }
         end
     }
+
+    -- cool search plugin kinda like vscodes global search
+    use { 'windwp/nvim-spectre', requires = 'nvim-lua/plenary.nvim' }
 
     use { 'tpope/vim-abolish' }
 
@@ -385,10 +388,10 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer]' })
 
 -- using fzf to find files instead of telescope
--- vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sf', ':Files<cr>', { desc = '[S]earch [F]iles' })
--- vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sg', ':Rg<cr>', { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+-- vim.keymap.set('n', '<leader>sf', ':Files<cr>', { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+-- vim.keymap.set('n', '<leader>sg', ':Rg<cr>', { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
@@ -580,7 +583,8 @@ mason_lspconfig.setup_handlers {
 -- setup workspaces
 require("workspaces").setup({
     hooks = {
-        open = { "Files" },
+        open = { "Telescope find_files" },
+        -- open = { "Files" },
     }
 })
 
