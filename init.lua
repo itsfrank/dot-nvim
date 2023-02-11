@@ -97,7 +97,6 @@ require('packer').startup(function(use)
     use 'tpope/vim-rhubarb'
     use 'lewis6991/gitsigns.nvim'
 
-    use 'navarasu/onedark.nvim' -- Theme inspired by Atom
     use { "catppuccin/nvim", as = "catppuccin" }
     use 'nvim-lualine/lualine.nvim' -- Fancier statusline
     use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
@@ -363,6 +362,10 @@ vim.keymap.set('v', '<leader>le', 'g_', { desc = "[L]ine [E]nd" })
 vim.keymap.set('n', '<leader>fta', ':Format<cr>', { desc = "[F]orma[T] [A]ll - formats enire buffer" })
 vim.keymap.set('n', '<leader>ftm', ':FormatModifications<cr>',
     { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" })
+
+-- Git DiffView Keymaps
+vim.keymap.set('n', '<leader>gdvo', ':DiffviewOpen<cr>', { desc = '[G]it [D]iff [V]iew [O]pen' })
+vim.keymap.set('n', '<leader>gdvc', ':DiffviewClose<cr>', { desc = '[G]it [D]iff [V]iew [C]lose' })
 
 -- system clipboard keymaps
 vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Yank to system cpliboar' })
