@@ -26,6 +26,20 @@ require('packer').startup(function(use)
         },
     }
 
+    -- Lsp integration for non-lsp formatters
+    use {
+        "jose-elias-alvarez/null-ls.nvim",
+        config = function()
+            local null_ls = require("null-ls")
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.black,
+                }
+            })
+        end,
+        requires = { "nvim-lua/plenary.nvim" },
+    }
     -- icons
     use { 'nvim-tree/nvim-web-devicons' }
 
@@ -279,7 +293,7 @@ require('gitsigns').setup {
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
     defaults = {
-        -- path_display = { "smart" },
+        path_display = { "smart" },
         mappings = {
             i = {
                 ["<C-j>"] = "move_selection_next",
