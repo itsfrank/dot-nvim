@@ -109,7 +109,6 @@ require("lazy").setup({
 
     { -- Easier terminal window management
         "akinsho/toggleterm.nvim",
-        tag = "*",
         config = function()
             require("toggleterm").setup({
                 size = 40,
