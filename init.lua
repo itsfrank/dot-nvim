@@ -64,6 +64,10 @@ require("lazy").setup({
 
     -- better git diffview
     { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
+
+    -- GitLens in neovim
+    "f-person/git-blame.nvim",
+
     -- fzf stuff cause telesope is slow on game engine
     { "junegunn/fzf", build = "./install --bin" }, -- fzf
     "junegunn/fzf.vim", -- fzf vim plugin
@@ -385,10 +389,10 @@ vim.keymap.set("n", "<leader>/", function()
 end, { desc = "[/] Fuzzily search in current buffer]" })
 
 -- using fzf to find files instead of telescope
-vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
--- vim.keymap.set('n', '<leader>sf', ':Files<cr>', { desc = '[S]earch [F]iles' })
-vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
--- vim.keymap.set('n', '<leader>sg', ':Rg<cr>', { desc = '[S]earch by [G]rep' })
+-- vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sf", ":Files<cr>", { desc = "[S]earch [F]iles" })
+-- vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sg", ":Rg<cr>", { desc = "[S]earch by [G]rep" })
 vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sw", require("telescope.builtin").grep_string, { desc = "[S]earch current [W]ord" })
 vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
@@ -588,8 +592,8 @@ mason_lspconfig.setup_handlers({
 -- setup workspaces
 require("workspaces").setup({
     hooks = {
-        open = { "Telescope find_files" },
-        -- open = { "Files" },
+        -- open = { "Telescope find_files" },
+        open = { "Files" },
     },
 })
 

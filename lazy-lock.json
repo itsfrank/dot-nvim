@@ -8,6 +8,7 @@
   "fidget.nvim": { "branch": "main", "commit": "9dc6d15fdb877b2fb09ea0ba2dfde9beccb5965a" },
   "fzf": { "branch": "master", "commit": "352ea072269dfe2a3c429785a95a2f22887ccda3" },
   "fzf.vim": { "branch": "master", "commit": "dc71692255b62d1f67dc55c8e51ab1aa467b1d46" },
+  "git-blame.nvim": { "branch": "master", "commit": "17840d01f42ee308e1dbbcc2cde991297aee36c9" },
   "gitsigns.nvim": { "branch": "main", "commit": "5f1451ea7d9a9005b3f0bedeab20cef7a4c65993" },
   "indent-blankline.nvim": { "branch": "master", "commit": "8299fe7703dfff4b1752aeed271c3b95281a952d" },
   "lazy.nvim": { "branch": "main", "commit": "e916f41df26e33b01f1b3ebe28881090da3a7281" },
