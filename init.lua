@@ -361,6 +361,18 @@ vim.keymap.set(
     { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
 )
 
+-- better window movement
+vim.keymap.set("n", "<M-h>", "<C-w>h", { desc = "Window left" })
+vim.keymap.set("n", "<M-j>", "<C-w>j", { desc = "Window down" })
+vim.keymap.set("n", "<M-k>", "<C-w>k", { desc = "Window up" })
+vim.keymap.set("n", "<M-l>", "<C-w>l", { desc = "Window right" })
+
+-- better window resize
+vim.keymap.set("n", '<M-=>', ':exe "resize " . (winheight(0) * 3/2)<CR>')
+vim.keymap.set("n", '<M-->', ':exe "resize " . (winheight(0) * 2/3)<CR>')
+vim.keymap.set("n", '<M-+>', ':exe "vertical resize " . (winwidth(0) * 3/2)<CR>')
+vim.keymap.set("n", '<M-_>', ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>')
+
 -- Git DiffView Keymaps
 vim.keymap.set("n", "<leader>gdvo", ":DiffviewOpen<cr>", { desc = "[G]it [D]iff [V]iew [O]pen" })
 vim.keymap.set("n", "<leader>gdvc", ":DiffviewClose<cr>", { desc = "[G]it [D]iff [V]iew [C]lose" })
