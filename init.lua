@@ -43,11 +43,13 @@ require("lazy").setup({
                 sources = {
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.rustfmt,
                 },
             })
         end,
         dependencies = { "nvim-lua/plenary.nvim" },
     },
+
     -- icons
     "nvim-tree/nvim-web-devicons",
 
@@ -59,6 +61,15 @@ require("lazy").setup({
         "goolord/alpha-nvim",
         config = function()
             require("frank.dashboard")
+        end,
+    },
+
+    -- better autocomplete for commands and search
+    {
+        "gelguy/wilder.nvim",
+        config = function()
+            local wilder = require("wilder")
+            wilder.setup({ modes = { ":", "/", "?" } })
         end,
     },
 
@@ -87,7 +98,19 @@ require("lazy").setup({
     -- cool search plugin kinda like vscodes global search
     { "windwp/nvim-spectre", dependencies = "nvim-lua/plenary.nvim" },
 
+    -- more powerful search/replace, use :S or :%S
     "tpope/vim-abolish",
+
+    -- clairvoyant cursor navigation
+    { "ggandor/leap.nvim" },
+
+    -- auto close pairs
+    {
+        "echasnovski/mini.pairs",
+        config = function()
+            require("mini.pairs").setup()
+        end,
+    },
 
     { -- Autocompletion
         "hrsh7th/nvim-cmp",
@@ -121,8 +144,20 @@ require("lazy").setup({
     },
 
     -- Git related plugins
-    "tpope/vim-fugitive",
-    "tpope/vim-rhubarb",
+    {
+        "tpope/vim-fugitive",
+        init = function()
+            vim.g.fugitive_legacy_commands = 0
+        end,
+    },
+
+    {
+        "tpope/vim-rhubarb",
+        config = function()
+            vim.g.github_enterprise_urls = { "https://github.rbx.com" }
+        end,
+    },
+
     "lewis6991/gitsigns.nvim",
 
     { "catppuccin/nvim", as = "catppuccin" },
@@ -238,6 +273,20 @@ require("lualine").setup({
         theme = "catppuccin",
         component_separators = "|",
         section_separators = "",
+    },
+    sections = {
+        lualine_a = {
+            {
+                "filename",
+                file_status = true, -- Displays file status (readonly status, modified status)
+                newfile_status = true, -- Display new file status (new file means no write after created)
+                path = 1,
+                -- 0: Just the filename
+                -- 1: Relative path
+                -- 2: Absolute path
+                -- 3: Absolute path, with tilde as the home directory
+            },
+        },
     },
 })
 
@@ -368,10 +417,10 @@ vim.keymap.set("n", "<M-k>", "<C-w>k", { desc = "Window up" })
 vim.keymap.set("n", "<M-l>", "<C-w>l", { desc = "Window right" })
 
 -- better window resize
-vim.keymap.set("n", '<M-=>', ':exe "resize " . (winheight(0) * 3/2)<CR>')
-vim.keymap.set("n", '<M-->', ':exe "resize " . (winheight(0) * 2/3)<CR>')
-vim.keymap.set("n", '<M-+>', ':exe "vertical resize " . (winwidth(0) * 3/2)<CR>')
-vim.keymap.set("n", '<M-_>', ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>')
+vim.keymap.set("n", "<M-=>", ':exe "resize " . (winheight(0) * 3/2)<CR>')
+vim.keymap.set("n", "<M-->", ':exe "resize " . (winheight(0) * 2/3)<CR>')
+vim.keymap.set("n", "<M-+>", ':exe "vertical resize " . (winwidth(0) * 3/2)<CR>')
+vim.keymap.set("n", "<M-_>", ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>')
 
 -- Git DiffView Keymaps
 vim.keymap.set("n", "<leader>gdvo", ":DiffviewOpen<cr>", { desc = "[G]it [D]iff [V]iew [O]pen" })
@@ -387,6 +436,18 @@ vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from system clipboar" })
 vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste from system clipboar" })
 vim.keymap.set("v", "<leader>P", '"+P', { desc = "Paste from system clipboar" })
 vim.keymap.set("t", "<c-p>", "<c-\\><c-n>pi", { desc = "Paste in terminal mode" })
+
+-- Leap mappings
+vim.keymap.set({ "n", "x", "o" }, "<leader>ss", "<Plug>(leap-forward-to)", { desc = "Leap [S]earch forward to" })
+vim.keymap.set({ "n", "x", "o" }, "<leader>SS", "<Plug>(leap-backward-to)", { desc = "Leap [S]earch backwards to" })
+vim.keymap.set(
+    { "n", "x", "o" },
+    "<leader>gs",
+    "<Plug>(leap-from-window)",
+    { desc = "Leap [S]earch all windowsbackwards to" }
+)
+vim.keymap.set({ "x", "o" }, "<leader>xx", "<Plug>(leap-forward-till)", { desc = "Leap [S]earch forward till" })
+vim.keymap.set({ "x", "o" }, "<leader>XX", "<Plug>(leap-backward-till)", { desc = "Leap [S]earch backwards till" })
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
@@ -563,7 +624,22 @@ local servers = {
     -- gopls = {},
     -- pyright = {},
     pyright = {},
-    rust_analyzer = {},
+    rust_analyzer = {
+        imports = {
+            granularity = {
+                group = "module",
+            },
+            prefix = "self",
+        },
+        cargo = {
+            buildScripts = {
+                enable = true,
+            },
+        },
+        procMacro = {
+            enable = true,
+        },
+    },
     -- tsserver = {},
 
     lua_ls = {
