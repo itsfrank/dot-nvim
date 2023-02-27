@@ -1,3 +1,5 @@
+local frank_utils = require("frank.utils")
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -126,6 +128,20 @@ require("lazy").setup({
         dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects",
         },
+    },
+
+    -- code outline and navigation
+    {
+        "stevearc/aerial.nvim",
+        config = function()
+            require("aerial").setup({ -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+                on_attach = function(bufnr)
+                    -- Jump forwards/backwards with '{' and '}'
+                    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+                    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+                end,
+            })
+        end,
     },
 
     { -- Auto cleanup whitespace
@@ -288,6 +304,7 @@ require("lualine").setup({
                 -- 3: Absolute path, with tilde as the home directory
             },
         },
+        lualine_x = { "aerial" },
     },
 })
 
@@ -427,15 +444,35 @@ vim.keymap.set("n", "<M-_>", ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>'
 vim.keymap.set("n", "<leader>gdvo", ":DiffviewOpen<cr>", { desc = "[G]it [D]iff [V]iew [O]pen" })
 vim.keymap.set("n", "<leader>gdvc", ":DiffviewClose<cr>", { desc = "[G]it [D]iff [V]iew [C]lose" })
 
+-- spectre keymaps
+vim.keymap.set("n", "<leader>sp", function()
+    local spectre = require("spectre")
+    local spectre_state = require("spectre.state")
+
+    local is_open = false
+    if spectre_state.bufnr ~= nil then
+        local wins = vim.fn.win_findbuf(spectre_state.bufnr)
+        if next(wins) ~= nil then
+            is_open = true
+        end
+    end
+
+    if is_open then
+        spectre.close()
+    else
+        spectre.open()
+    end
+end, { desc = "Toggle [S][P]ectre search" })
+
 -- system clipboard keymaps
 vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank to system cpliboar" })
 vim.keymap.set("n", "<leader>Y", '"+yg_', { desc = "Yank to system cpliboar" })
 vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to system cpliboar" })
 vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank to system cpliboar" })
-vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from system clipboar" })
-vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from system clipboar" })
-vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste from system clipboar" })
-vim.keymap.set("v", "<leader>P", '"+P', { desc = "Paste from system clipboar" })
+vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
+vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from system clipboard" })
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
+vim.keymap.set("v", "<leader>P", '"+P', { desc = "Paste from system clipboard" })
 vim.keymap.set("t", "<c-p>", "<c-\\><c-n>pi", { desc = "Paste in terminal mode" })
 
 -- Leap mappings
@@ -449,6 +486,9 @@ vim.keymap.set(
 )
 vim.keymap.set({ "x", "o" }, "<leader>xx", "<Plug>(leap-forward-till)", { desc = "Leap [S]earch forward till" })
 vim.keymap.set({ "x", "o" }, "<leader>XX", "<Plug>(leap-backward-till)", { desc = "Leap [S]earch backwards till" })
+
+-- Aerial keymaps
+vim.keymap.set("n", "<leader>ar", "<cmd>AerialToggle!<CR>", { desc = "Toggle [A]e[R]ial" })
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
@@ -481,6 +521,7 @@ vim.keymap.set(
     { desc = "[F]ile [B]rowser" }
 )
 
+-- telescope workspace search
 require("telescope").load_extension("workspaces")
 vim.keymap.set(
     "n",
@@ -488,6 +529,10 @@ vim.keymap.set(
     require("telescope").extensions.workspaces.workspaces,
     { desc = "Search [W]or[K] spaces" }
 )
+
+-- telescope code outline search
+require("telescope").load_extension("aerial")
+vim.keymap.set("n", "<leader>sa", require("telescope").extensions.aerial.aerial, { desc = "Search [S]earch [A]erial" })
 
 -- Toggleterm keymaps
 vim.keymap.set("n", "<leader>``", ":ToggleTerm<cr>", { desc = "Toggle terminal view" })
