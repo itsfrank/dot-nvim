@@ -1,5 +1,3 @@
-local frank_utils = require("frank.utils")
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -112,6 +110,22 @@ require("lazy").setup({
         "echasnovski/mini.pairs",
         config = function()
             require("mini.pairs").setup()
+        end,
+    },
+
+    -- highlight indent markers
+    {
+        "echasnovski/mini.indentscope",
+        config = function()
+            require("mini.indentscope").setup({
+                draw = {
+                    delay = 20,
+                    animation = require('mini.indentscope').gen_animation.linear({duration= 5}),
+                },
+                options = {
+                    try_as_border = true,
+                },
+            })
         end,
     },
 
