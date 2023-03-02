@@ -19,6 +19,50 @@ vim.g.maplocalleader = " "
 -- Keymap for better default experience
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
+-- function to set up lsp-esque behavior when something providing LSP features attaches to a buffer (lspconfig & null-ls)
+local lsp_on_attach = function(client, bufnr)
+    -- lets us more easily define mappings specific
+    -- for LSP related items. It sets the mode, buffer and description for us each time.
+    local nmap = function(keys, func, desc)
+        if desc then
+            desc = "LSP: " .. desc
+        end
+
+        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+    end
+
+    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+    nmap("<leader>ca", ":CodeActionMenu<cr>", "[C]ode [A]ction")
+    -- nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+    nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+    nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+    nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+    nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+    nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
+    nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+    nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+
+    -- See `:help K` for why this keymap
+    nmap("K", vim.lsp.buf.hover, "Hover Documentation")
+    nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+
+    -- Lesser used LSP functionality
+    nmap("<leader>wl", function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, "[W]orkspace [L]ist Folders")
+
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
+        vim.lsp.buf.format()
+    end, { desc = "Format current buffer with LSP" })
+
+    -- Adds command `:FormatModifications`
+    local lsp_format_modifications = require("lsp-format-modifications")
+    lsp_format_modifications.attach(client, bufnr, { format_on_save = false })
+end
+
+-- plugins, TODO: move these to individual files
 require("lazy").setup({
     { -- LSP Configuration & Plugins
         "neovim/nvim-lspconfig",
@@ -41,10 +85,16 @@ require("lazy").setup({
         config = function()
             local null_ls = require("null-ls")
             null_ls.setup({
+                on_attach = lsp_on_attach,
                 sources = {
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.rustfmt,
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = { "json", "yaml", "markdown" },
+                        extra_args = { "--prose-wrap=always" },
+                    }),
+                    null_ls.builtins.diagnostics.markdownlint,
                 },
             })
         end,
@@ -105,6 +155,27 @@ require("lazy").setup({
     -- clairvoyant cursor navigation
     { "ggandor/leap.nvim" },
 
+    -- suround stuff easily
+    {
+        "echasnovski/mini.surround",
+        config = function()
+            require("mini.surround").setup({
+                mappings = {
+                    add = "<leader>wa", -- Add surrounding in Normal and Visual modes
+                    delete = "<leader>wd", -- Delete surrounding
+                    find = "<leader>wf", -- Find surrounding (to the right)
+                    find_left = "<leader>wF", -- Find surrounding (to the left)
+                    highlight = "<leader>wh", -- Highlight surrounding
+                    replace = "<leader>wr", -- Replace surrounding
+                    update_n_lines = "<leader>wn", -- Update `n_lines`
+
+                    suffix_last = "l", -- Suffix to search with "prev" method
+                    suffix_next = "n", -- Suffix to search with "next" method
+                },
+            })
+        end,
+    },
+
     -- auto close pairs
     {
         "echasnovski/mini.pairs",
@@ -120,7 +191,7 @@ require("lazy").setup({
             require("mini.indentscope").setup({
                 draw = {
                     delay = 20,
-                    animation = require('mini.indentscope').gen_animation.linear({duration= 5}),
+                    animation = require("mini.indentscope").gen_animation.linear({ duration = 5 }),
                 },
                 options = {
                     try_as_border = true,
@@ -174,6 +245,20 @@ require("lazy").setup({
         end,
     },
 
+    -- cool text alignment plugin
+    "junegunn/vim-easy-align",
+
+    -- render markdown in neovim
+    { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
+
+    -- markdown live preview
+    {
+        "iamcco/markdown-preview.nvim",
+        build = function()
+            vim.fn["mkdp#util#install"]()
+        end,
+    },
+
     -- Git related plugins
     {
         "tpope/vim-fugitive",
@@ -191,7 +276,7 @@ require("lazy").setup({
 
     "lewis6991/gitsigns.nvim",
 
-    { "catppuccin/nvim", as = "catppuccin" },
+    { "catppuccin/nvim", as = "catppuccin", priority = 500 },
     "nvim-lualine/lualine.nvim", -- Fancier statusline
     "lukas-reineke/indent-blankline.nvim", -- Add indentation guides even on blank lines
     "numToStr/Comment.nvim", -- "gc" to comment visual regions/lines
@@ -212,7 +297,6 @@ require("lazy").setup({
     },
 
     "joechrisellis/lsp-format-modifications.nvim",
-    -- end packer plugin list
 })
 
 local os_info = require("frank.os-info")
@@ -455,8 +539,12 @@ vim.keymap.set("n", "<M-+>", ':exe "vertical resize " . (winwidth(0) * 3/2)<CR>'
 vim.keymap.set("n", "<M-_>", ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>')
 
 -- Git DiffView Keymaps
-vim.keymap.set("n", "<leader>gdvo", ":DiffviewOpen<cr>", { desc = "[G]it [D]iff [V]iew [O]pen" })
-vim.keymap.set("n", "<leader>gdvc", ":DiffviewClose<cr>", { desc = "[G]it [D]iff [V]iew [C]lose" })
+vim.keymap.set("n", "<leader>dvo", ":DiffviewOpen<cr>", { desc = "[D]iff [V]iew [O]pen" })
+vim.keymap.set("n", "<leader>dvc", ":DiffviewClose<cr>", { desc = "[D]iff [V]iew [C]lose" })
+
+-- Table mode keymap
+vim.keymap.set("v", "<leader>f<Bslash>", ":EasyAlign*<Bar><cr>", { desc = "[F]ormat Table (split at '|' [\\])" })
+vim.keymap.set("n", "<leader>f<Bslash>", "vip:EasyAlign*<Bar><cr>g;", { desc = "[F]ormat Table (split at '|' [\\])" })
 
 -- spectre keymaps
 vim.keymap.set("n", "<leader>sp", function()
@@ -564,7 +652,7 @@ vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]])
 -- See `:help nvim-treesitter`
 require("nvim-treesitter.configs").setup({
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { "c", "cpp", "go", "lua", "python", "rust", "typescript", "vim", "help" },
+    ensure_installed = { "c", "cpp", "go", "lua", "python", "rust", "typescript", "vim", "help", "markdown" },
 
     highlight = { enable = true },
     indent = { enable = true, disable = { "python" } },
@@ -629,51 +717,6 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 
--- LSP settings.
---  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(client, bufnr)
-    -- lets us more easily define mappings specific
-    -- for LSP related items. It sets the mode, buffer and description for us each time.
-    local nmap = function(keys, func, desc)
-        if desc then
-            desc = "LSP: " .. desc
-        end
-
-        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-    end
-
-    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-    nmap("<leader>ca", ":CodeActionMenu<cr>", "[C]ode [A]ction")
-    -- nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
-    nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-    nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-    nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-    nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
-    nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-    nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-
-    -- See `:help K` for why this keymap
-    nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-    nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
-
-    -- Lesser used LSP functionality
-    nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-    nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-    nmap("<leader>wl", function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, "[W]orkspace [L]ist Folders")
-
-    -- Create a command `:Format` local to the LSP buffer
-    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-        vim.lsp.buf.format()
-    end, { desc = "Format current buffer with LSP" })
-    -- Adds command `:FormatModifications`
-    local lsp_format_modifications = require("lsp-format-modifications")
-    lsp_format_modifications.attach(client, bufnr, { format_on_save = false })
-end
-
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -731,7 +774,7 @@ mason_lspconfig.setup_handlers({
     function(server_name)
         require("lspconfig")[server_name].setup({
             capabilities = capabilities,
-            on_attach = on_attach,
+            on_attach = lsp_on_attach,
             settings = servers[server_name],
         })
     end,
