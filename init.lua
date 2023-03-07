@@ -20,35 +20,7 @@ vim.g.maplocalleader = " "
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
 -- plugins, TODO: move these to individual files
-require("lazy").setup({
-	{ import = "plugins" },
-
-	-- icons
-	"nvim-tree/nvim-web-devicons",
-
-	-- workspaces management
-	"natecraddock/workspaces.nvim",
-
-	-- GitLens in neovim
-	"f-person/git-blame.nvim",
-
-	-- more powerful search/replace, use :S or :%S
-	"tpope/vim-abolish",
-
-	-- clairvoyant cursor navigation
-	"ggandor/leap.nvim",
-
-	-- cool text alignment plugin
-	"junegunn/vim-easy-align",
-
-	-- gutter symbols for line git status
-	"lewis6991/gitsigns.nvim",
-	"nvim-lualine/lualine.nvim", -- Fancier statusline
-	"lukas-reineke/indent-blankline.nvim", -- Add indentation guides even on blank lines
-	"numToStr/Comment.nvim", -- "gc" to comment visual regions/lines
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
-	"joechrisellis/lsp-format-modifications.nvim",
-})
+require("lazy").setup("plugins")
 
 local os_info = require("frank.os-info")
 -- [[ Setting options ]]
@@ -227,8 +199,16 @@ vim.fn.setenv(
 	"FZF_DEFAULT_OPTS",
 	"--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' "
 )
-vim.g.fzf_layout =
-{ up = "~90%", window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = "rounded" } }
+vim.g.fzf_layout = {
+	up = "~90%",
+	window = {
+		width = 0.9,
+		height = 0.9,
+		yoffset = 0.5,
+		xoffset = 0.5,
+		border = "rounded",
+	},
+}
 
 -- for xome reason fzfz_colors isnt working on my windows PC, so I deen to do this
 if os_info:is_windows() then
