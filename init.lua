@@ -1,13 +1,13 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -21,251 +21,34 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
 -- plugins, TODO: move these to individual files
 require("lazy").setup({
-    { -- LSP Configuration & Plugins
-        "neovim/nvim-lspconfig",
-        dependencies = {
-            -- Automatically install LSPs to stdpath for neovim
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
+	{ import = "plugins" },
+	-- icons
+	"nvim-tree/nvim-web-devicons",
 
-            -- Useful status updates for LSP
-            "j-hui/fidget.nvim",
+	-- workspaces management
+	"natecraddock/workspaces.nvim",
 
-            -- Additional lua configuration, makes nvim stuff amazing
-            "folke/neodev.nvim",
-        },
-    },
+	-- GitLens in neovim
+	"f-person/git-blame.nvim",
 
-    -- Lsp integration for non-lsp formatters
-    {
-        "jose-elias-alvarez/null-ls.nvim",
-        config = function()
-            local null_ls = require("null-ls")
-            null_ls.setup({
-                on_attach = require("frank.on-lsp-attach"),
-                sources = {
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.rustfmt,
-                    null_ls.builtins.formatting.prettier.with({
-                        filetypes = { "json", "yaml", "markdown" },
-                        extra_args = { "--prose-wrap=always" },
-                    }),
-                    null_ls.builtins.diagnostics.markdownlint,
-                },
-            })
-        end,
-        dependencies = { "nvim-lua/plenary.nvim" },
-    },
+	"junegunn/fzf.vim", -- fzf vim plugin
 
-    -- icons
-    "nvim-tree/nvim-web-devicons",
+	-- more powerful search/replace, use :S or :%S
+	"tpope/vim-abolish",
 
-    -- workspaces management
-    "natecraddock/workspaces.nvim",
+	-- clairvoyant cursor navigation
+	"ggandor/leap.nvim",
 
-    -- start page
-    {
-        "goolord/alpha-nvim",
-        config = function()
-            require("frank.dashboard")
-        end,
-    },
+	-- cool text alignment plugin
+	"junegunn/vim-easy-align",
 
-    -- better autocomplete for commands and search
-    {
-        "gelguy/wilder.nvim",
-        config = function()
-            local wilder = require("wilder")
-            wilder.setup({ modes = { ":", "/", "?" } })
-        end,
-    },
-
-    -- better git diffview
-    { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
-
-    -- GitLens in neovim
-    "f-person/git-blame.nvim",
-
-    -- fzf stuff cause telesope is slow on game engine
-    { "junegunn/fzf", build = "./install --bin" }, -- fzf
-    "junegunn/fzf.vim", -- fzf vim plugin
-
-    -- improved search & replace (and other fun stuff)
-    {
-        "smjonas/live-command.nvim",
-        config = function()
-            require("live-command").setup({
-                commands = {
-                    S = { cmd = "Subvert" }, -- must be defined before we import vim-abolish
-                },
-            })
-        end,
-    },
-
-    -- cool search plugin kinda like vscodes global search
-    { "windwp/nvim-spectre", dependencies = "nvim-lua/plenary.nvim" },
-
-    -- more powerful search/replace, use :S or :%S
-    "tpope/vim-abolish",
-
-    -- clairvoyant cursor navigation
-    { "ggandor/leap.nvim" },
-
-    -- suround stuff easily
-    {
-        "echasnovski/mini.surround",
-        config = function()
-            require("mini.surround").setup({
-                mappings = {
-                    add = "<leader>wa", -- Add surrounding in Normal and Visual modes
-                    delete = "<leader>wd", -- Delete surrounding
-                    find = "<leader>wf", -- Find surrounding (to the right)
-                    find_left = "<leader>wF", -- Find surrounding (to the left)
-                    highlight = "<leader>wh", -- Highlight surrounding
-                    replace = "<leader>wr", -- Replace surrounding
-                    update_n_lines = "<leader>wn", -- Update `n_lines`
-
-                    suffix_last = "l", -- Suffix to search with "prev" method
-                    suffix_next = "n", -- Suffix to search with "next" method
-                },
-            })
-        end,
-    },
-
-    -- auto close pairs
-    {
-        "echasnovski/mini.pairs",
-        config = function()
-            require("mini.pairs").setup()
-        end,
-    },
-
-    -- highlight indent markers
-    {
-        "echasnovski/mini.indentscope",
-        config = function()
-            require("mini.indentscope").setup({
-                draw = {
-                    delay = 20,
-                    animation = require("mini.indentscope").gen_animation.linear({ duration = 5 }),
-                },
-                options = {
-                    try_as_border = true,
-                },
-            })
-        end,
-    },
-
-    { -- Autocompletion
-        "hrsh7th/nvim-cmp",
-        dependencies = { "hrsh7th/cmp-nvim-lsp", "L3MON4D3/LuaSnip", "saadparwaiz1/cmp_luasnip" },
-    },
-
-    { -- Highlight, edit, and navigate code
-        "nvim-treesitter/nvim-treesitter",
-        build = function()
-            pcall(require("nvim-treesitter.install").update({ with_sync = true }))
-        end,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects",
-        },
-    },
-
-    -- code outline and navigation
-    {
-        "stevearc/aerial.nvim",
-        config = function()
-            require("aerial").setup({ -- optionally use on_attach to set keymaps when aerial has attached to a buffer
-                on_attach = function(bufnr)
-                    -- Jump forwards/backwards with '{' and '}'
-                    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-                    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-                end,
-            })
-        end,
-    },
-
-    { -- Auto cleanup whitespace
-        "lewis6991/spaceless.nvim",
-        config = function()
-            require("spaceless").setup()
-        end,
-    },
-
-    { -- Easier terminal window management
-        "akinsho/toggleterm.nvim",
-        config = function()
-            require("toggleterm").setup({
-                size = 40,
-            })
-        end,
-    },
-
-    -- cool text alignment plugin
-    "junegunn/vim-easy-align",
-
-    -- render markdown in neovim
-    { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
-
-    -- markdown live preview
-    {
-        "iamcco/markdown-preview.nvim",
-        build = function()
-            vim.fn["mkdp#util#install"]()
-        end,
-    },
-
-    -- Git related plugins
-    {
-        "tpope/vim-fugitive",
-        init = function()
-            vim.g.fugitive_legacy_commands = 0
-        end,
-    },
-
-    {
-        "tpope/vim-rhubarb",
-        config = function()
-            vim.g.github_enterprise_urls = { "https://github.rbx.com" }
-        end,
-    },
-
-    "lewis6991/gitsigns.nvim",
-
-    { "catppuccin/nvim", as = "catppuccin", priority = 500 },
-    "nvim-lualine/lualine.nvim", -- Fancier statusline
-    "lukas-reineke/indent-blankline.nvim", -- Add indentation guides even on blank lines
-    "numToStr/Comment.nvim", -- "gc" to comment visual regions/lines
-    "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
-
-    -- Fuzzy Finder (files, lsp, etc)
-    { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
-
-    -- Telescope based file browser (alternative to netrw)
-    { "nvim-telescope/telescope-file-browser.nvim" },
-
-    -- File broswer that behaves like a buffer
-    {
-        "stevearc/oil.nvim",
-        config = function()
-            require("oil").setup({
-                keymaps = {
-                    ["<C-y>"] = "actions.copy_entry_path",
-                },
-            })
-        end,
-    },
-
-    -- Multi-Cursor
-    "mg979/vim-visual-multi",
-
-    {
-        "weilbith/nvim-code-action-menu",
-        cmd = "CodeActionMenu",
-    },
-
-    "joechrisellis/lsp-format-modifications.nvim",
+	-- gutter symbols for line git status
+	"lewis6991/gitsigns.nvim",
+	"nvim-lualine/lualine.nvim", -- Fancier statusline
+	"lukas-reineke/indent-blankline.nvim", -- Add indentation guides even on blank lines
+	"numToStr/Comment.nvim", -- "gc" to comment visual regions/lines
+	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+	"joechrisellis/lsp-format-modifications.nvim",
 })
 
 local os_info = require("frank.os-info")
@@ -318,9 +101,9 @@ vim.opt.wrap = false
 vim.opt.swapfile = false
 vim.opt.backup = false
 if os_info:is_windows() then
-    vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
+	vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
 elseif os_info:is_mac() or os_info:is_linux() then
-    vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+	vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 end
 vim.opt.undofile = true
 
@@ -342,37 +125,37 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-    group = highlight_group,
-    pattern = "*",
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+	group = highlight_group,
+	pattern = "*",
 })
 
 -- Set lualine as statusline
 -- See `:help lualine.txt`
 require("lualine").setup({
-    options = {
-        icons_enabled = false,
-        theme = "catppuccin",
-        component_separators = "|",
-        section_separators = "",
-    },
-    sections = {
-        lualine_a = {
-            {
-                "filename",
-                file_status = true, -- Displays file status (readonly status, modified status)
-                newfile_status = true, -- Display new file status (new file means no write after created)
-                path = 1,
-                -- 0: Just the filename
-                -- 1: Relative path
-                -- 2: Absolute path
-                -- 3: Absolute path, with tilde as the home directory
-            },
-        },
-        lualine_x = { "aerial" },
-    },
+	options = {
+		icons_enabled = false,
+		theme = "catppuccin",
+		component_separators = "|",
+		section_separators = "",
+	},
+	sections = {
+		lualine_a = {
+			{
+				"filename",
+				file_status = true, -- Displays file status (readonly status, modified status)
+				newfile_status = true, -- Display new file status (new file means no write after created)
+				path = 1,
+				-- 0: Just the filename
+				-- 1: Relative path
+				-- 2: Absolute path
+				-- 3: Absolute path, with tilde as the home directory
+			},
+		},
+		lualine_x = { "aerial" },
+	},
 })
 
 -- Enable Comment.nvim
@@ -381,105 +164,101 @@ require("Comment").setup()
 -- Enable `lukas-reineke/indent-blankline.nvim`
 -- See `:help indent_blankline.txt`
 require("indent_blankline").setup({
-    char = "┊",
-    show_trailing_blankline_indent = false,
+	char = "┊",
+	show_trailing_blankline_indent = false,
 })
 
 -- Gitsigns
 -- See `:help gitsigns.txt`
 require("gitsigns").setup({
-    signs = {
-        add = { text = "+" },
-        change = { text = "~" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "~" },
-    },
+	signs = {
+		add = { text = "+" },
+		change = { text = "~" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
+		changedelete = { text = "~" },
+	},
 })
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require("telescope").setup({
-    defaults = {
-        path_display = { "smart" },
-        mappings = {
-            i = {
-                ["<C-j>"] = "move_selection_next",
-                ["<C-k>"] = "move_selection_previous",
-                ["<C-h>"] = "which_key",
-            },
-            n = {
-                ["<C-h>"] = "which_key",
-            },
-        },
-        pickers = {
-            find_files = {
-                find_command = {
-                    "fd",
-                    "--type",
-                    "file",
-                    "--type",
-                    "symlink",
-                    "--hidden",
-                    "--exclude",
-                    ".git",
-                    -- put your other patterns here
-                },
-            },
-        },
-    },
-    extensions = {
-        file_browser = {
-            hijack_netrw = true,
-            hidden = true,
-        },
-        fzf = {
-            fuzzy = true, -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true, -- override the file sorter
-            case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-            -- the default case_mode is "smart_case"
-        },
-    },
+	defaults = {
+		path_display = { "smart" },
+		mappings = {
+			i = {
+				["<C-j>"] = "move_selection_next",
+				["<C-k>"] = "move_selection_previous",
+				["<C-h>"] = "which_key",
+			},
+			n = {
+				["<C-h>"] = "which_key",
+			},
+		},
+		pickers = {
+			find_files = {
+				find_command = {
+					"fd",
+					"--type",
+					"file",
+					"--type",
+					"symlink",
+					"--hidden",
+					"--exclude",
+					".git",
+					-- put your other patterns here
+				},
+			},
+		},
+	},
+	extensions = {
+		fzf = {
+			fuzzy = true, -- false will only do exact matching
+			override_generic_sorter = true, -- override the generic sorter
+			override_file_sorter = true, -- override the file sorter
+			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+			-- the default case_mode is "smart_case"
+		},
+	},
 })
 
 -- fzf config
 vim.fn.setenv("FZF_DEFAULT_COMMAND", "fd --type f --color=always")
 vim.fn.setenv(
-    "FZF_DEFAULT_OPTS",
-    "--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' "
+	"FZF_DEFAULT_OPTS",
+	"--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' "
 )
 vim.g.fzf_layout =
-{ up = "~90%", window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = "rounded" } }
+	{ up = "~90%", window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = "rounded" } }
 
 -- for xome reason fzfz_colors isnt working on my windows PC, so I deen to do this
 if os_info:is_windows() then
-    -- thes eoptions will need to be re-generated when colorscheme is changed
-    -- on a machione where fzf_colors works do: `:echo fzf#wrap().options`
-    vim.fn.setenv(
-        "FZF_DEFAULT_OPTS",
-        os.getenv("FZF_DEFAULT_OPTS")
-        .. " "
-        .. "--color=bg+:#2a2b3c,bg:#1e1e2e,spinner:#74c7ec,hl:#585b70 "
-        .. "--color=fg:#cdd6f4,pointer:#cba6f7,info:#f5c2e7,header:#585b70 "
-        .. "--color=marker:#cba6f7,fg+:#cdd6f4,prompt:#cba6f7,hl+:#cba6f7"
-    )
+	-- thes eoptions will need to be re-generated when colorscheme is changed
+	-- on a machione where fzf_colors works do: `:echo fzf#wrap().options`
+	vim.fn.setenv(
+		"FZF_DEFAULT_OPTS",
+		os.getenv("FZF_DEFAULT_OPTS")
+			.. " "
+			.. "--color=bg+:#2a2b3c,bg:#1e1e2e,spinner:#74c7ec,hl:#585b70 "
+			.. "--color=fg:#cdd6f4,pointer:#cba6f7,info:#f5c2e7,header:#585b70 "
+			.. "--color=marker:#cba6f7,fg+:#cdd6f4,prompt:#cba6f7,hl+:#cba6f7"
+	)
 elseif os_info:is_mac() or os_info:is_linux() then
-    vim.g.fzf_colors = {
-        ["fg"] = { "fg", "Normal" },
-        ["bg"] = { "bg", "Normal" },
-        ["hl"] = { "fg", "Comment" },
-        ["fg+"] = { "fg", "CursorLine", "CursorColumn", "Normal" },
-        ["bg+"] = { "bg", "CursorLine", "CursorColumn" },
-        ["hl+"] = { "fg", "Statement" },
-        ["info"] = { "fg", "PreProc" },
-        ["border"] = { "fg", "Normal" },
-        ["prompt"] = { "fg", "Conditional" },
-        ["pointer"] = { "fg", "Exception" },
-        ["marker"] = { "fg", "Keyword" },
-        ["spinner"] = { "fg", "Label" },
-        ["header"] = { "fg", "Comment" },
-    }
+	vim.g.fzf_colors = {
+		["fg"] = { "fg", "Normal" },
+		["bg"] = { "bg", "Normal" },
+		["hl"] = { "fg", "Comment" },
+		["fg+"] = { "fg", "CursorLine", "CursorColumn", "Normal" },
+		["bg+"] = { "bg", "CursorLine", "CursorColumn" },
+		["hl+"] = { "fg", "Statement" },
+		["info"] = { "fg", "PreProc" },
+		["border"] = { "fg", "Normal" },
+		["prompt"] = { "fg", "Conditional" },
+		["pointer"] = { "fg", "Exception" },
+		["marker"] = { "fg", "Keyword" },
+		["spinner"] = { "fg", "Label" },
+		["header"] = { "fg", "Comment" },
+	}
 end
 -- Franks keymaps
 vim.keymap.set("n", "<leader>cs", ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
@@ -489,10 +268,10 @@ vim.keymap.set("v", "<leader>ls", "^", { desc = "[L]ine [S]tart" })
 vim.keymap.set("v", "<leader>le", "g_", { desc = "[L]ine [E]nd" })
 vim.keymap.set("n", "<leader>fta", ":Format<cr>", { desc = "[F]orma[T] [A]ll - formats enire buffer" })
 vim.keymap.set(
-    "n",
-    "<leader>ftm",
-    ":FormatModifications<cr>",
-    { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
+	"n",
+	"<leader>ftm",
+	":FormatModifications<cr>",
+	{ desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
 )
 
 -- better window movement
@@ -517,22 +296,22 @@ vim.keymap.set("n", "<leader>f<Bslash>", "vip:EasyAlign*<Bar><cr>g;", { desc = "
 
 -- spectre keymaps
 vim.keymap.set("n", "<leader>sp", function()
-    local spectre = require("spectre")
-    local spectre_state = require("spectre.state")
+	local spectre = require("spectre")
+	local spectre_state = require("spectre.state")
 
-    local is_open = false
-    if spectre_state.bufnr ~= nil then
-        local wins = vim.fn.win_findbuf(spectre_state.bufnr)
-        if next(wins) ~= nil then
-            is_open = true
-        end
-    end
+	local is_open = false
+	if spectre_state.bufnr ~= nil then
+		local wins = vim.fn.win_findbuf(spectre_state.bufnr)
+		if next(wins) ~= nil then
+			is_open = true
+		end
+	end
 
-    if is_open then
-        spectre.close()
-    else
-        spectre.open()
-    end
+	if is_open then
+		spectre.close()
+	else
+		spectre.open()
+	end
 end, { desc = "Toggle [S][P]ectre search" })
 
 -- system clipboard keymaps
@@ -550,10 +329,10 @@ vim.keymap.set("t", "<c-p>", "<c-\\><c-n>pi", { desc = "Paste in terminal mode" 
 vim.keymap.set({ "n", "x", "o" }, "<leader>ss", "<Plug>(leap-forward-to)", { desc = "Leap [S]earch forward to" })
 vim.keymap.set({ "n", "x", "o" }, "<leader>SS", "<Plug>(leap-backward-to)", { desc = "Leap [S]earch backwards to" })
 vim.keymap.set(
-    { "n", "x", "o" },
-    "<leader>gs",
-    "<Plug>(leap-from-window)",
-    { desc = "Leap [S]earch all windowsbackwards to" }
+	{ "n", "x", "o" },
+	"<leader>gs",
+	"<Plug>(leap-from-window)",
+	{ desc = "Leap [S]earch all windowsbackwards to" }
 )
 vim.keymap.set({ "x", "o" }, "<leader>xx", "<Plug>(leap-forward-till)", { desc = "Leap [S]earch forward till" })
 vim.keymap.set({ "x", "o" }, "<leader>XX", "<Plug>(leap-backward-till)", { desc = "Leap [S]earch backwards till" })
@@ -565,12 +344,12 @@ vim.keymap.set("n", "<leader>ar", "<cmd>AerialToggle!<CR>", { desc = "Toggle [A]
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
 vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
 vim.keymap.set("n", "<leader>/", function()
-    -- You can pass additional configuration to telescope to change theme, layout, etc.
-    require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-        winblend = 10,
-        previewer = false,
-        layout_config = { width = 0.8 },
-    }))
+	-- You can pass additional configuration to telescope to change theme, layout, etc.
+	require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+		winblend = 10,
+		previewer = false,
+		layout_config = { width = 0.8 },
+	}))
 end, { desc = "[/] Fuzzily search in current buffer]" })
 
 -- using fzf to find files instead of telescope
@@ -583,25 +362,16 @@ vim.keymap.set("n", "<leader>sw", require("telescope.builtin").grep_string, { de
 vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
 vim.keymap.set("n", "<leader>km", require("telescope.builtin").keymaps, { desc = "[K]ey [M]aps" })
 
--- Telescope file browser
-require("telescope").load_extension("file_browser")
-vim.keymap.set(
-    "n",
-    "<leader>fb",
-    require("telescope").extensions.file_browser.file_browser,
-    { desc = "[F]ile [B]rowser" }
-)
-
 -- oil file browser
 vim.keymap.set("n", "<leader>-", require("oil").open, { desc = "Oil.nvim: Open parent directory [-]" })
 
 -- telescope workspace search
 require("telescope").load_extension("workspaces")
 vim.keymap.set(
-    "n",
-    "<leader>wk",
-    require("telescope").extensions.workspaces.workspaces,
-    { desc = "Search [W]or[K] spaces" }
+	"n",
+	"<leader>wk",
+	require("telescope").extensions.workspaces.workspaces,
+	{ desc = "Search [W]or[K] spaces" }
 )
 
 -- telescope code outline search
@@ -623,64 +393,64 @@ vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]])
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require("nvim-treesitter.configs").setup({
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { "c", "cpp", "go", "lua", "python", "rust", "typescript", "vim", "help", "markdown" },
+	-- Add languages to be installed here that you want installed for treesitter
+	ensure_installed = { "c", "cpp", "go", "lua", "python", "rust", "typescript", "vim", "help", "markdown" },
 
-    highlight = { enable = true },
-    indent = { enable = true, disable = { "python" } },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "<c-space>",
-            node_incremental = "<c-space>",
-            scope_incremental = "<c-s>",
-            node_decremental = "<c-backspace>",
-        },
-    },
-    textobjects = {
-        select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-                -- You can use the capture groups defined in textobjects.scm
-                ["aa"] = "@parameter.outer",
-                ["ia"] = "@parameter.inner",
-                ["af"] = "@function.outer",
-                ["if"] = "@function.inner",
-                ["ac"] = "@class.outer",
-                ["ic"] = "@class.inner",
-            },
-        },
-        move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-                ["]m"] = "@function.outer",
-                ["]]"] = "@class.outer",
-            },
-            goto_next_end = {
-                ["]M"] = "@function.outer",
-                ["]["] = "@class.outer",
-            },
-            goto_previous_start = {
-                ["[m"] = "@function.outer",
-                ["[["] = "@class.outer",
-            },
-            goto_previous_end = {
-                ["[M"] = "@function.outer",
-                ["[]"] = "@class.outer",
-            },
-        },
-        swap = {
-            enable = true,
-            swap_next = {
-                ["<leader>a"] = "@parameter.inner",
-            },
-            swap_previous = {
-                ["<leader>A"] = "@parameter.inner",
-            },
-        },
-    },
+	highlight = { enable = true },
+	indent = { enable = true, disable = { "python" } },
+	incremental_selection = {
+		enable = true,
+		keymaps = {
+			init_selection = "<c-space>",
+			node_incremental = "<c-space>",
+			scope_incremental = "<c-s>",
+			node_decremental = "<c-backspace>",
+		},
+	},
+	textobjects = {
+		select = {
+			enable = true,
+			lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+			keymaps = {
+				-- You can use the capture groups defined in textobjects.scm
+				["aa"] = "@parameter.outer",
+				["ia"] = "@parameter.inner",
+				["af"] = "@function.outer",
+				["if"] = "@function.inner",
+				["ac"] = "@class.outer",
+				["ic"] = "@class.inner",
+			},
+		},
+		move = {
+			enable = true,
+			set_jumps = true, -- whether to set jumps in the jumplist
+			goto_next_start = {
+				["]m"] = "@function.outer",
+				["]]"] = "@class.outer",
+			},
+			goto_next_end = {
+				["]M"] = "@function.outer",
+				["]["] = "@class.outer",
+			},
+			goto_previous_start = {
+				["[m"] = "@function.outer",
+				["[["] = "@class.outer",
+			},
+			goto_previous_end = {
+				["[M"] = "@function.outer",
+				["[]"] = "@class.outer",
+			},
+		},
+		swap = {
+			enable = true,
+			swap_next = {
+				["<leader>a"] = "@parameter.inner",
+			},
+			swap_previous = {
+				["<leader>A"] = "@parameter.inner",
+			},
+		},
+	},
 })
 
 -- Diagnostic keymaps
@@ -695,34 +465,34 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-    clangd = {},
-    -- gopls = {},
-    -- pyright = {},
-    pyright = {},
-    rust_analyzer = {
-        imports = {
-            granularity = {
-                group = "module",
-            },
-            prefix = "self",
-        },
-        cargo = {
-            buildScripts = {
-                enable = true,
-            },
-        },
-        procMacro = {
-            enable = true,
-        },
-    },
-    -- tsserver = {},
+	clangd = {},
+	-- gopls = {},
+	-- pyright = {},
+	pyright = {},
+	rust_analyzer = {
+		imports = {
+			granularity = {
+				group = "module",
+			},
+			prefix = "self",
+		},
+		cargo = {
+			buildScripts = {
+				enable = true,
+			},
+		},
+		procMacro = {
+			enable = true,
+		},
+	},
+	-- tsserver = {},
 
-    lua_ls = {
-        Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-        },
-    },
+	lua_ls = {
+		Lua = {
+			workspace = { checkThirdParty = false },
+			telemetry = { enable = false },
+		},
+	},
 }
 
 -- Setup neovim lua configuration
@@ -739,29 +509,29 @@ require("mason").setup()
 local mason_lspconfig = require("mason-lspconfig")
 
 mason_lspconfig.setup({
-    ensure_installed = vim.tbl_keys(servers),
+	ensure_installed = vim.tbl_keys(servers),
 })
 
 mason_lspconfig.setup_handlers({
-    function(server_name)
-        require("lspconfig")[server_name].setup({
-            capabilities = capabilities,
-            on_attach = require("frank.on-lsp-attach"),
-            settings = servers[server_name],
-        })
-    end,
+	function(server_name)
+		require("lspconfig")[server_name].setup({
+			capabilities = capabilities,
+			on_attach = require("frank.on-lsp-attach"),
+			settings = servers[server_name],
+		})
+	end,
 })
 
 -- setup workspaces
 require("workspaces").setup({
-    hooks = {
-        -- open = { "Telescope find_files" },
-        open = {
-            function(_, path)
-                require("oil").open(path)
-            end,
-        },
-    },
+	hooks = {
+		-- open = { "Telescope find_files" },
+		open = {
+			function(_, path)
+				require("oil").open(path)
+			end,
+		},
+	},
 })
 
 -- Turn on lsp status information
@@ -772,44 +542,44 @@ local cmp = require("cmp")
 local luasnip = require("luasnip")
 
 cmp.setup({
-    snippet = {
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end,
-    },
-    mapping = cmp.mapping.preset.insert({
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        -- ['<C-Space>'] = cmp.mapping.complete(),
-        ["<C-s>"] = cmp.mapping.complete(),
-        ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-        }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-    }),
-    sources = {
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-    },
-    view = {
-        entries = { name = "custom", selection_order = "bottom_up" },
-    },
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	mapping = cmp.mapping.preset.insert({
+		["<C-d>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		-- ['<C-Space>'] = cmp.mapping.complete(),
+		["<C-s>"] = cmp.mapping.complete(),
+		["<CR>"] = cmp.mapping.confirm({
+			behavior = cmp.ConfirmBehavior.Replace,
+			select = true,
+		}),
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+	}),
+	sources = {
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+	},
+	view = {
+		entries = { name = "custom", selection_order = "bottom_up" },
+	},
 })
