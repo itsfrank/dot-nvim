@@ -22,6 +22,7 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 -- plugins, TODO: move these to individual files
 require("lazy").setup({
 	{ import = "plugins" },
+
 	-- icons
 	"nvim-tree/nvim-web-devicons",
 
@@ -30,8 +31,6 @@ require("lazy").setup({
 
 	-- GitLens in neovim
 	"f-person/git-blame.nvim",
-
-	"junegunn/fzf.vim", -- fzf vim plugin
 
 	-- more powerful search/replace, use :S or :%S
 	"tpope/vim-abolish",
@@ -229,7 +228,7 @@ vim.fn.setenv(
 	"--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' "
 )
 vim.g.fzf_layout =
-	{ up = "~90%", window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = "rounded" } }
+{ up = "~90%", window = { width = 0.9, height = 0.9, yoffset = 0.5, xoffset = 0.5, border = "rounded" } }
 
 -- for xome reason fzfz_colors isnt working on my windows PC, so I deen to do this
 if os_info:is_windows() then
@@ -238,10 +237,10 @@ if os_info:is_windows() then
 	vim.fn.setenv(
 		"FZF_DEFAULT_OPTS",
 		os.getenv("FZF_DEFAULT_OPTS")
-			.. " "
-			.. "--color=bg+:#2a2b3c,bg:#1e1e2e,spinner:#74c7ec,hl:#585b70 "
-			.. "--color=fg:#cdd6f4,pointer:#cba6f7,info:#f5c2e7,header:#585b70 "
-			.. "--color=marker:#cba6f7,fg+:#cdd6f4,prompt:#cba6f7,hl+:#cba6f7"
+		.. " "
+		.. "--color=bg+:#2a2b3c,bg:#1e1e2e,spinner:#74c7ec,hl:#585b70 "
+		.. "--color=fg:#cdd6f4,pointer:#cba6f7,info:#f5c2e7,header:#585b70 "
+		.. "--color=marker:#cba6f7,fg+:#cdd6f4,prompt:#cba6f7,hl+:#cba6f7"
 	)
 elseif os_info:is_mac() or os_info:is_linux() then
 	vim.g.fzf_colors = {

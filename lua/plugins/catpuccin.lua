@@ -1,5 +1,7 @@
-return {{
-	"catppuccin/nvim",
-	as = "catppuccin",
-	priority = 500,
-}}
+return {
+	{ -- fancy colors meow!
+		"catppuccin/nvim",
+		as = "catppuccin",
+		priority = 500,
+	},
+}
