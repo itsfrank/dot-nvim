@@ -288,6 +288,18 @@ require("lazy").setup({
     -- Telescope based file browser (alternative to netrw)
     { "nvim-telescope/telescope-file-browser.nvim" },
 
+    -- File broswer that behaves like a buffer
+    {
+        "stevearc/oil.nvim",
+        config = function()
+            require("oil").setup({
+                keymaps = {
+                    ["<C-y>"] = "actions.copy_entry_path",
+                },
+            })
+        end,
+    },
+
     -- Multi-Cursor
     "mg979/vim-visual-multi",
 
@@ -623,6 +635,9 @@ vim.keymap.set(
     { desc = "[F]ile [B]rowser" }
 )
 
+-- oil file browser
+vim.keymap.set("n", "<leader>-", require("oil").open, { desc = "Oil.nvim: Open parent directory [-]" })
+
 -- telescope workspace search
 require("telescope").load_extension("workspaces")
 vim.keymap.set(
@@ -784,7 +799,11 @@ mason_lspconfig.setup_handlers({
 require("workspaces").setup({
     hooks = {
         -- open = { "Telescope find_files" },
-        open = { "Files" },
+        open = {
+            function(name, path)
+                require("oil").open(path)
+            end,
+        },
     },
 })
 
