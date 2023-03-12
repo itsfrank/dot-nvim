@@ -3,10 +3,20 @@ return {
 		-- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope-dap.nvim",
+			"natecraddock/workspaces.nvim",
+			"stevearc/aerial.nvim",
+		},
 
 		config = function()
-			require("telescope").setup({
+			local telescope = require("telescope")
+			telescope.load_extension("dap")
+			telescope.load_extension("workspaces")
+			telescope.load_extension("aerial")
+
+			telescope.setup({
 				defaults = {
 					path_display = { "smart" },
 					mappings = {

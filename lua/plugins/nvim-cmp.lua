@@ -1,7 +1,12 @@
 return {
 	{ -- Autocompletion
 		"hrsh7th/nvim-cmp",
-		dependencies = { "hrsh7th/cmp-nvim-lsp", "L3MON4D3/LuaSnip", "saadparwaiz1/cmp_luasnip" },
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
+			"rcarriga/cmp-dap",
+		},
 
 		config = function()
 			local cmp = require("cmp")
@@ -47,6 +52,15 @@ return {
 				},
 				view = {
 					entries = { name = "custom", selection_order = "bottom_up" },
+				},
+				enabled = function()
+					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+				end,
+			})
+
+			cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+				sources = {
+					{ name = "dap" },
 				},
 			})
 		end,

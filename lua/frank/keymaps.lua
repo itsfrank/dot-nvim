@@ -112,7 +112,6 @@ vim.keymap.set("n", "<leader>km", require("telescope.builtin").keymaps, { desc =
 vim.keymap.set("n", "<leader>-", require("oil").open, { desc = "Oil.nvim: Open parent directory [-]" })
 
 -- workspaces/telescope workspace search
-require("telescope").load_extension("workspaces")
 vim.keymap.set(
     "n",
     "<leader>wk",
@@ -121,7 +120,6 @@ vim.keymap.set(
 )
 
 -- aerial/telescope mappings
-require("telescope").load_extension("aerial")
 vim.keymap.set("n", "<leader>sa", require("telescope").extensions.aerial.aerial, { desc = "Search [S]earch [A]erial" })
 
 -- Toggleterm mappings
