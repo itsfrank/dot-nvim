@@ -51,7 +51,7 @@ return {
 		config = function()
 			local dap = require("dap")
 			require("dapui").setup()
-			require("nvim-dap-virtual-text").setup()
+			require("nvim-dap-virtual-text").setup({})
 
 			dap.adapters.lldb = lldb_adapter
 			dap.configurations.cpp = { new_cpp_debug_config() }

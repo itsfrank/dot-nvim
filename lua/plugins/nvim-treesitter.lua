@@ -22,6 +22,8 @@ return {
 					"vim",
 					"help",
 					"markdown",
+					"http",
+					"json",
 				},
 
 				highlight = { enable = true },
