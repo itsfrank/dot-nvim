@@ -33,7 +33,7 @@ return {
 							color = "LibmodalMode",
 							cond = function()
 								local debug_layer = require("frank.debug-layer")
-								return debug_layer.layer ~= nil and debug_layer.layer:is_active()
+								return debug_layer.layer:is_active()
 							end,
 						},
 					},
