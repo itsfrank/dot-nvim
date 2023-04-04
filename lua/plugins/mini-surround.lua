@@ -16,6 +16,7 @@ return {
 					suffix_next = "n", -- Suffix to search with "next" method
 				},
 			})
+			vim.keymap.set("n", "<leader>ww", "viw<leader>wa", { desc = "[W]rap [W]ord" })
 		end,
 	},
 }

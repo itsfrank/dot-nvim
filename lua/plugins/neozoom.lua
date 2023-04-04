@@ -41,7 +41,7 @@ return {
 				--   exclude_buftypes = {},
 				-- },
 			})
-			vim.keymap.set("n", "<leader>z", function()
+			vim.keymap.set("n", "<leader>Z", function()
 				vim.cmd("NeoZoomToggle")
 			end, { silent = true, nowait = true })
 		end,

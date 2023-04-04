@@ -1,5 +1,6 @@
 return {
-	{ -- LSP Configuration & Plugins
+	{
+		-- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			-- Automatically install LSPs to stdpath for neovim
@@ -11,7 +12,6 @@ return {
 			-- Additional lua configuration, makes nvim stuff amazing
 			"folke/neodev.nvim",
 		},
-
 		config = function()
 			local servers = {
 				clangd = {},
@@ -40,6 +40,18 @@ return {
 					Lua = {
 						workspace = { checkThirdParty = false },
 						telemetry = { enable = false },
+						diagnostics = {
+							globals = {
+								-- Busted
+								"describe",
+								"it",
+								"before_each",
+								"after_each",
+								"teardown",
+								"pending",
+								"clear",
+							},
+						},
 					},
 				},
 			}

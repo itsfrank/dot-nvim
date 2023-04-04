@@ -28,8 +28,8 @@ local function set_keybinds()
 end
 
 function m.init()
+	set_keybinds()
 	vim.keymap.set("n", "<leader>db", function()
-		set_keybinds()
 		m.layer:enter()
 		fire_layer_change()
 	end, { desc = "Enter the [D]e[B]ug layer" })

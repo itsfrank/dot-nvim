@@ -5,18 +5,18 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 
 -- basic maps
 vim.keymap.set("n", "<leader>cs", ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
-vim.keymap.set("n", "<leader>ls", "^", { desc = "[L]ine [S]tart" })
-vim.keymap.set("n", "<leader>le", "g_", { desc = "[L]ine [E]nd" })
-vim.keymap.set("v", "<leader>ls", "^", { desc = "[L]ine [S]tart" })
-vim.keymap.set("v", "<leader>le", "g_", { desc = "[L]ine [E]nd" })
+vim.keymap.set({ "n", "v" }, "<leader>ls", "^", { desc = "[L]ine [S]tart" })
+vim.keymap.set({ "n", "v" }, "<leader>le", "g_", { desc = "[L]ine [E]nd" })
+vim.keymap.set({ "n", "v" }, "<leader>hh", "^", { desc = "Line Start - [H] to move left" })
+vim.keymap.set({ "n", "v" }, "<leader>ll", "g_", { desc = "Line End - [L] to move right" })
 
 -- formatting
 vim.keymap.set("n", "<leader>fta", ":Format<cr>", { desc = "[F]orma[T] [A]ll - formats enire buffer" })
 vim.keymap.set(
-    "n",
-    "<leader>ftm",
-    ":FormatModifications<cr>",
-    { desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
+	"n",
+	"<leader>ftm",
+	":FormatModifications<cr>",
+	{ desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
 )
 
 -- better window movement
@@ -53,32 +53,32 @@ vim.keymap.set("n", "<leader>f<Bslash>", "vip:EasyAlign*<Bar><cr>g;", { desc = "
 
 -- spectre keymaps
 vim.keymap.set("n", "<leader>sp", function()
-    local spectre = require("spectre")
-    local spectre_state = require("spectre.state")
+	local spectre = require("spectre")
+	local spectre_state = require("spectre.state")
 
-    local is_open = false
-    if spectre_state.bufnr ~= nil then
-        local wins = vim.fn.win_findbuf(spectre_state.bufnr)
-        if next(wins) ~= nil then
-            is_open = true
-        end
-    end
+	local is_open = false
+	if spectre_state.bufnr ~= nil then
+		local wins = vim.fn.win_findbuf(spectre_state.bufnr)
+		if next(wins) ~= nil then
+			is_open = true
+		end
+	end
 
-    if is_open then
-        spectre.close()
-    else
-        spectre.open()
-    end
+	if is_open then
+		spectre.close()
+	else
+		spectre.open()
+	end
 end, { desc = "Toggle [S][P]ectre search" })
 
 -- Leap mappings
 vim.keymap.set({ "n", "x", "o" }, "<leader>ss", "<Plug>(leap-forward-to)", { desc = "Leap [S]earch forward to" })
 vim.keymap.set({ "n", "x", "o" }, "<leader>SS", "<Plug>(leap-backward-to)", { desc = "Leap [S]earch backwards to" })
 vim.keymap.set(
-    { "n", "x", "o" },
-    "<leader>gs",
-    "<Plug>(leap-from-window)",
-    { desc = "Leap [S]earch all windowsbackwards to" }
+	{ "n", "x", "o" },
+	"<leader>gs",
+	"<Plug>(leap-from-window)",
+	{ desc = "Leap [S]earch all windowsbackwards to" }
 )
 vim.keymap.set({ "x", "o" }, "<leader>xx", "<Plug>(leap-forward-till)", { desc = "Leap [S]earch forward till" })
 vim.keymap.set({ "x", "o" }, "<leader>XX", "<Plug>(leap-backward-till)", { desc = "Leap [S]earch backwards till" })
@@ -90,12 +90,12 @@ vim.keymap.set("n", "<leader>ar", "<cmd>AerialToggle!<CR>", { desc = "Toggle [A]
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
 vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
 vim.keymap.set("n", "<leader>/", function()
-    -- You can pass additional configuration to telescope to change theme, layout, etc.
-    require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-        winblend = 10,
-        previewer = false,
-        layout_config = { width = 0.8 },
-    }))
+	-- You can pass additional configuration to telescope to change theme, layout, etc.
+	require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+		winblend = 10,
+		previewer = false,
+		layout_config = { width = 0.8 },
+	}))
 end, { desc = "[/] Fuzzily search in current buffer]" })
 
 -- using fzf to find files instead of telescope
@@ -113,10 +113,10 @@ vim.keymap.set("n", "<leader>-", require("oil").open, { desc = "Oil.nvim: Open p
 
 -- workspaces/telescope workspace search
 vim.keymap.set(
-    "n",
-    "<leader>wk",
-    require("telescope").extensions.workspaces.workspaces,
-    { desc = "Search [W]or[K] spaces" }
+	"n",
+	"<leader>wk",
+	require("telescope").extensions.workspaces.workspaces,
+	{ desc = "Search [W]or[K] spaces" }
 )
 
 -- aerial/telescope mappings
@@ -139,3 +139,11 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+
+-- plugin testing keymaps
+vim.keymap.set(
+	"n",
+	"<leader>rt",
+	"<Plug>PlenaryTestFile",
+	{ desc = "[R]un [T]ests - runs plenary tests in current file" }
+)

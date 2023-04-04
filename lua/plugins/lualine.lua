@@ -1,5 +1,6 @@
 return {
-	{ -- Fancier statusline
+	{
+	-- Fancier statusline
 		"nvim-lualine/lualine.nvim",
 		config = function()
 			-- referesh lualine when we enter or leave a libmodal mode
@@ -28,7 +29,6 @@ return {
 								vim.api.nvim_set_hl(0, "LibmodalMode", base)
 								return "DEBUG"
 							end,
-
 							icon = { "▊", align = "left" },
 							color = "LibmodalMode",
 							cond = function()
@@ -50,7 +50,7 @@ return {
 						},
 					},
 					lualine_c = { "diff" },
-					lualine_x = { "aerial" },
+					lualine_x = { "aerial", "branch" },
 				},
 			})
 		end,

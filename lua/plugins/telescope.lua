@@ -5,16 +5,13 @@ return {
 		branch = "0.1.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope-dap.nvim",
-			"natecraddock/workspaces.nvim",
-			"stevearc/aerial.nvim",
 		},
-
 		config = function()
 			local telescope = require("telescope")
 			telescope.load_extension("dap")
 			telescope.load_extension("workspaces")
 			telescope.load_extension("aerial")
+			telescope.load_extension("git_worktree")
 
 			telescope.setup({
 				defaults = {
