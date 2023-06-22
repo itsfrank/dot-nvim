@@ -25,6 +25,8 @@ return {
 			})
 
 			vim.keymap.set("n", "<leader>tt", ":ToggleTerm<cr>", { desc = "[T]oggle [T]erm" })
+			vim.keymap.set("n", "<c-t><c-t>", ":ToggleTerm<cr>", { desc = "[T]oggle [T]erm" })
+			vim.keymap.set("t", "<c-t><c-t>", "<c-\\><c-n>:ToggleTerm<cr>", { desc = "[T]oggle [T]erm" })
 
 			-- custom terminal for gitui
 			local Terminal = require("toggleterm.terminal").Terminal

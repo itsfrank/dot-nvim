@@ -72,8 +72,15 @@ vim.keymap.set("n", "<leader>sp", function()
 end, { desc = "Toggle [S][P]ectre search" })
 
 -- Leap mappings
-vim.keymap.set({ "n", "x", "o" }, "<leader>ss", "<Plug>(leap-forward-to)", { desc = "Leap [S]earch forward to" })
-vim.keymap.set({ "n", "x", "o" }, "<leader>SS", "<Plug>(leap-backward-to)", { desc = "Leap [S]earch backwards to" })
+-- vim.keymap.set({ "n", "x", "o" }, "<leader>ss", "<Plug>(leap-forward-to)", { desc = "Leap [S]earch forward to" })
+-- vim.keymap.set({ "n", "x", "o" }, "<leader>SS", "<Plug>(leap-backward-to)", { desc = "Leap [S]earch backwards to" })
+
+-- bi-directional search, leap is a little bit less smart, but less cognitive overhead
+vim.keymap.set({ "n", "x", "o" }, "<leader>ss", function ()
+  local current_window = vim.fn.win_getid()
+  require('leap').leap { target_windows = { current_window } }
+end, { desc = "Leap [S]earch bi-directionally" })
+
 vim.keymap.set(
 	{ "n", "x", "o" },
 	"<leader>gs",

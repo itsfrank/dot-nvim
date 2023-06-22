@@ -25,6 +25,7 @@ local function set_keybinds()
 	m.layer:map("n", "b", dap.toggle_breakpoint, { desc = "Debug: Toggle [B]reakpoint" })
 	-- layer:map("n", "B", dap.step_out, { desc = "Debug: Toggle Conditional [B]reakpoint" })
 	m.layer:map("n", "c", dap.continue, { desc = "Debug: [C]ontinue" })
+	m.layer:map("n", "dui", require("dapui").toggle, { desc = "Debug: [D]ap [U][I] toggle" })
 end
 
 function m.init()

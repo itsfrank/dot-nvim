@@ -33,6 +33,8 @@ return {
 
 				git_worktree.delete_worktree(current_worktree, false, {})
 			end, {})
+
+			vim.keymap.set("n", "<leader>wts", ':WtSwitch<cr>', { desc = "Git [W]ork[T]ree [S]witch" })
 		end,
 	},
 }

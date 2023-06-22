@@ -1,7 +1,9 @@
 return {
-	{ -- fancy colors meow!
+	{
+		-- fancy colors meow!
 		"catppuccin/nvim",
+		lazy = false,
 		as = "catppuccin",
-		priority = 500,
+		priority = 1000,
 	},
 }
