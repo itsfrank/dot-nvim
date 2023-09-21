@@ -10,6 +10,9 @@ vim.keymap.set({ "n", "v" }, "<leader>le", "g_", { desc = "[L]ine [E]nd" })
 vim.keymap.set({ "n", "v" }, "<leader>hh", "^", { desc = "Line Start - [H] to move left" })
 vim.keymap.set({ "n", "v" }, "<leader>ll", "g_", { desc = "Line End - [L] to move right" })
 
+vim.keymap.set({ "n" }, "<M-o>", "o<esc>", { desc = "New line below" })
+vim.keymap.set({ "n" }, "<M-O>", "O<esc>", { desc = "New line above" })
+
 -- formatting
 vim.keymap.set("n", "<leader>fta", ":Format<cr>", { desc = "[F]orma[T] [A]ll - formats enire buffer" })
 vim.keymap.set(
@@ -32,9 +35,9 @@ vim.keymap.set("n", "<M-+>", ':exe "vertical resize " . (winwidth(0) * 3/2)<CR>'
 vim.keymap.set("n", "<M-_>", ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>')
 
 -- system clipboard keymaps
-vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank to system cpliboar" })
-vim.keymap.set("n", "<leader>Y", '"+yg_', { desc = "Yank to system cpliboar" })
-vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to system cpliboar" })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank to system cpliboard" })
+vim.keymap.set("n", "<leader>Y", '"+yg_', { desc = "Yank to system cpliboard" })
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to system cpliboard" })
 vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank to system cpliboar" })
 vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
 vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from system clipboard" })
@@ -76,9 +79,9 @@ end, { desc = "Toggle [S][P]ectre search" })
 -- vim.keymap.set({ "n", "x", "o" }, "<leader>SS", "<Plug>(leap-backward-to)", { desc = "Leap [S]earch backwards to" })
 
 -- bi-directional search, leap is a little bit less smart, but less cognitive overhead
-vim.keymap.set({ "n", "x", "o" }, "<leader>ss", function ()
-  local current_window = vim.fn.win_getid()
-  require('leap').leap { target_windows = { current_window } }
+vim.keymap.set({ "n", "x", "o" }, "<leader>ss", function()
+	local current_window = vim.fn.win_getid()
+	require("leap").leap({ target_windows = { current_window } })
 end, { desc = "Leap [S]earch bi-directionally" })
 
 vim.keymap.set(

@@ -16,16 +16,17 @@ local function set_keybinds()
 		fire_layer_change()
 	end, { desc = "Exit the debug keymap layer" })
 
-	m.layer:map("n", "de", ":LaunchDebugger<cr>", { desc = "Debug Executeable - select exe with telescope" })
+	m.layer:map("n", "<leader>de", ":LaunchDebugger<cr>", { desc = "Debug Executeable - select exe with telescope" })
+	m.layer:map("n", "<leader>dui", require("dapui").toggle, { desc = "Debug: [D]ap [U][I] toggle" })
 
 	local dap = require("dap")
-	m.layer:map("n", "i", dap.step_into, { desc = "Debug: Step [I]nto" })
-	m.layer:map("n", "o", dap.step_over, { desc = "Debug: Step [O]ver" })
-	m.layer:map("n", "u", dap.step_out, { desc = "Debug: Step O[U]t" })
-	m.layer:map("n", "b", dap.toggle_breakpoint, { desc = "Debug: Toggle [B]reakpoint" })
-	-- layer:map("n", "B", dap.step_out, { desc = "Debug: Toggle Conditional [B]reakpoint" })
-	m.layer:map("n", "c", dap.continue, { desc = "Debug: [C]ontinue" })
-	m.layer:map("n", "dui", require("dapui").toggle, { desc = "Debug: [D]ap [U][I] toggle" })
+	m.layer:map("n", "I", dap.step_into, { desc = "Debug: Step [I]nto" })
+	m.layer:map("n", "O", dap.step_over, { desc = "Debug: Step [O]ver" })
+	m.layer:map("n", "U", dap.step_out, { desc = "Debug: Step O[U]t" })
+	m.layer:map("n", "C", dap.continue, { desc = "Debug: [C]ontinue" })
+
+	m.layer:map("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle [B]reakpoint" })
+	-- layer:map("n", "<leader>B", dap.step_out, { desc = "Debug: Toggle Conditional [B]reakpoint" })
 end
 
 function m.init()

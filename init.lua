@@ -18,6 +18,10 @@ vim.g.maplocalleader = " "
 -- Keymap for better default experience
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
+-- stop auto adding comments on mewline around a comment
+vim.cmd('autocmd BufEnter * set formatoptions-=cro')
+vim.cmd('autocmd BufEnter * setlocal formatoptions-=cro')
+
 require("lazy").setup("plugins")
 
 require("frank.options")

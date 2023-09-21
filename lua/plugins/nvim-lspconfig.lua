@@ -15,8 +15,8 @@ return {
 		config = function()
 			local servers = {
 				clangd = {},
-				-- gopls = {},
-				-- pyright = {},
+				gopls = {},
+				tsserver = {},
 				pyright = {},
 				rust_analyzer = {
 					imports = {
@@ -34,8 +34,6 @@ return {
 						enable = true,
 					},
 				},
-				-- tsserver = {},
-
 				lua_ls = {
 					Lua = {
 						workspace = { checkThirdParty = false },

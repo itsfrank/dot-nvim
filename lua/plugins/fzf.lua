@@ -9,7 +9,7 @@ return {
 			vim.fn.setenv("FZF_DEFAULT_COMMAND", "fd --type f --color=always")
 			vim.fn.setenv(
 				"FZF_DEFAULT_OPTS",
-				"--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' "
+				"--ansi --layout reverse --preview 'bat --color=always --style=header,grid --line-range :300 {}' --bind 'tab:down,btab:up'"
 			)
 			vim.g.fzf_layout = {
 				up = "~90%",

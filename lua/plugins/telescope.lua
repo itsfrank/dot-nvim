@@ -21,6 +21,8 @@ return {
 						i = {
 							["<C-j>"] = "move_selection_next",
 							["<C-k>"] = "move_selection_previous",
+							["<tab>"] = "move_selection_previous",
+							["<S-tab>"] = "move_selection_next",
 							["<C-h>"] = "which_key",
 						},
 						n = {
