@@ -1,17 +1,11 @@
 return {
 	{
 		"akinsho/git-conflict.nvim",
-		version = "*",
+		version = "1.1.1",
 		config = function()
-			require("git-conflict").setup()
-
-			-- mappings in conflicted files:
-			-- 		co — choose ours
-			-- 		ct — choose theirs
-			-- 		cb — choose both
-			-- 		c0 — choose none
-			-- 		]x — move to previous conflict
-			-- 		[x — move to next conflict
+			require("git-conflict").setup({
+				default_mappings = false, -- disable buffer local mapping created by this plugin
+			})
 		end,
 	},
 }
