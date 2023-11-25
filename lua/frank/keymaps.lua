@@ -3,6 +3,8 @@
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- unbind to use as tmux leader
+vim.keymap.set({"n","v"}, "<C-q>", "<Nop>")
 -- basic maps
 vim.keymap.set("n", "<leader>cs", ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
 vim.keymap.set({ "n", "v" }, "<leader>ls", "^", { desc = "[L]ine [S]tart" })
