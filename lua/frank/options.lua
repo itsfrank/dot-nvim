@@ -61,6 +61,9 @@ vim.opt.incsearch = true
 vim.opt.scrolloff = 8
 vim.opt.isfname:append("@-@")
 
+-- dont log lsp stuff (set to "debug" when you want them)
+vim.lsp.set_log_level("off")
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"
 
