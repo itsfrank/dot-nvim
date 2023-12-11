@@ -4,7 +4,7 @@ vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- unbind to use as tmux leader
-vim.keymap.set({"n","v"}, "<C-q>", "<Nop>")
+vim.keymap.set({ "n", "v" }, "<C-q>", "<Nop>")
 -- basic maps
 vim.keymap.set("n", "<leader>cs", ':let @/ = ""<cr>', { desc = "[C]lear [S]earch" })
 vim.keymap.set({ "n", "v" }, "<leader>ls", "^", { desc = "[L]ine [S]tart" })
@@ -16,7 +16,7 @@ vim.keymap.set({ "n" }, "<M-o>", "o<esc>", { desc = "New line below" })
 vim.keymap.set({ "n" }, "<M-O>", "O<esc>", { desc = "New line above" })
 
 -- formatting
-vim.keymap.set("n", "<leader>fta", ":Format<cr>", { desc = "[F]orma[T] [A]ll - formats enire buffer" })
+vim.keymap.set("n", "<leader>fta", ":Format<cr>", { desc = "[F]orma[T] [A]ll - formats enire buffer", silent = true })
 vim.keymap.set(
 	"n",
 	"<leader>ftm",
@@ -116,7 +116,7 @@ end, { desc = "[/] Fuzzily search in current buffer]" })
 
 -- keybinds for fzfx.nvim
 vim.keymap.set("n", "<leader>sf", ":FzfxFiles<cr>", { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sg",  ":FzfxLiveGrep<cr>", { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sg", ":FzfxLiveGrep<cr>", { desc = "[S]earch by [G]rep" })
 
 -- keybinds for telescope.nvim
 -- vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })

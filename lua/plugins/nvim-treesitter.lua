@@ -1,5 +1,6 @@
 return {
-	{ -- Highlight, edit, and navigate code
+	{
+	-- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
 		build = function()
 			pcall(require("nvim-treesitter.install").update({ with_sync = true }))
@@ -7,7 +8,6 @@ return {
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter-textobjects",
 		},
-
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				-- Add languages to be installed here that you want installed for treesitter
@@ -23,10 +23,10 @@ return {
 					"vim",
 					"help",
 					"markdown",
+					"markdown_inline",
 					"http",
 					"json",
 				},
-
 				highlight = { enable = true },
 				indent = { enable = true, disable = { "python" } },
 				incremental_selection = {
@@ -56,20 +56,20 @@ return {
 						enable = true,
 						set_jumps = true, -- whether to set jumps in the jumplist
 						goto_next_start = {
-							["]m"] = "@function.outer",
-							["]]"] = "@class.outer",
+							["]f"] = "@function.outer",
+							["]c"] = "@class.outer",
 						},
 						goto_next_end = {
 							["]M"] = "@function.outer",
-							["]["] = "@class.outer",
+							["]C"] = "@class.outer",
 						},
 						goto_previous_start = {
-							["[m"] = "@function.outer",
-							["[["] = "@class.outer",
+							["[f"] = "@function.outer",
+							["[c"] = "@class.outer",
 						},
 						goto_previous_end = {
-							["[M"] = "@function.outer",
-							["[]"] = "@class.outer",
+							["[F"] = "@function.outer",
+							["[C"] = "@class.outer",
 						},
 					},
 					swap = {

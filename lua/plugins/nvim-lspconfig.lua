@@ -18,22 +18,22 @@ return {
 				gopls = {},
 				tsserver = {},
 				pyright = {},
-				rust_analyzer = {
-					imports = {
-						granularity = {
-							group = "module",
-						},
-						prefix = "self",
-					},
-					cargo = {
-						buildScripts = {
-							enable = true,
-						},
-					},
-					procMacro = {
-						enable = true,
-					},
-				},
+				-- rust_analyzer = {
+				-- 	imports = {
+				-- 		granularity = {
+				-- 			group = "module",
+				-- 		},
+				-- 		prefix = "self",
+				-- 	},
+				-- 	cargo = {
+				-- 		buildScripts = {
+				-- 			enable = true,
+				-- 		},
+				-- 	},
+				-- 	procMacro = {
+				-- 		enable = true,
+				-- 	},
+				-- },
 				lua_ls = {
 					Lua = {
 						workspace = { checkThirdParty = false },
