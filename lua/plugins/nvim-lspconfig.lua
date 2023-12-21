@@ -1,16 +1,14 @@
-local utils = require("frank.utils")
+-- Two critical plugins here: lspconfig and mason
+--      lspconfig: configuration utility for LSP server
+--      mason: manager for automatically installing & updating LSP servers
 return {
 	{
 		-- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			-- Automatically install LSPs to stdpath for neovim
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			-- Useful status updates for LSP
 			"j-hui/fidget.nvim",
-
-			-- Additional lua configuration, makes nvim stuff amazing
 			"folke/neodev.nvim",
 		},
 		config = function()
@@ -18,10 +16,11 @@ return {
 			require("mason").setup()
 			require("fidget").setup()
 
+			local utils = require("frank.utils")
 			local lspconfig = require("lspconfig")
 
 			-- defaults passed to lspconfig (can be overriden in the lsp_servers list below)
-			local default_on_attach = require("frank.on-lsp-attach")
+			local default_on_attach = require("frank.lsp-on-attach")
 			local default_capabilities =
 				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
@@ -37,7 +36,7 @@ return {
 			---List of lsp servers that should be instaled and configuraton objects
 			---@type (ServerConfig|fun():ServerConfig)[]
 			local lsp_servers = {
-				-- configure your lsp settings here, the tabel is used to intialize below
+				-- configure your lsp settings here, the table is used to intialize below
 				clangd = {},
 				gopls = {},
 				tsserver = {},
