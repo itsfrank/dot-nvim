@@ -15,7 +15,7 @@ return {
 			local luasnip = require("luasnip")
 
 			cmp.setup({
-				preselect = "none",
+				preselect = "None",
 				snippet = {
 					expand = function(args)
 						luasnip.lsp_expand(args.body)

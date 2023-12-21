@@ -15,7 +15,6 @@ return {
 					"c",
 					"cpp",
 					"go",
-					"help",
 					"http",
 					"json",
 					"lua",
@@ -36,7 +35,7 @@ return {
 						init_selection = "<c-space>",
 						node_incremental = "<c-space>",
 						scope_incremental = "<c-f>",
-						node_decremental = "<c-backspace>",
+						node_decremental = "<c-r>",
 					},
 				},
 				textobjects = {
