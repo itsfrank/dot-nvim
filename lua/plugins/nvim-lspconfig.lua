@@ -27,7 +27,7 @@ return {
 			---Used to intialize lsp servers, note that on_attach and capabilities are extracted and set to nil
 			---@class ServerConfig : lspconfig.Config
 			---@field no_mason? boolean dont use mason to manage the instalation of this server
-			---@field enabled? fun():boolean|boolean disable the lsp, runs once per session (wont disable if things change after start)
+			---@field enabled? fun():boolean|boolean conditionally disable the lsp, runs once per session (wont disable if things change after start)
 			---@field capabilities? fun():any|any
 			---@field on_attach? fun():nil
 
@@ -42,6 +42,9 @@ return {
 				tsserver = {},
 				pyright = {},
 				lua_ls = {
+					enable = function()
+						return true
+					end,
 					Lua = {
 						workspace = { checkThirdParty = false },
 						telemetry = { enable = false },
@@ -91,9 +94,10 @@ return {
 					utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
 				local on_attach = utils.not_nil_or(utils.get_or_function(server_settings.on_attach), default_on_attach)
 
-				-- clear before passing to lspconfig
+				-- clean up before passing to lspconfig
 				server_settings.capabilities = nil
 				server_settings.on_attach = nil
+				server_settings.enable = utils.get_or_function(server_settings.enable)
 
 				lspconfig[server_name].setup({
 					capabilities = capabilities,
