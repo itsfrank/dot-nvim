@@ -42,9 +42,6 @@ return {
 				tsserver = {},
 				pyright = {},
 				lua_ls = {
-					enable = function()
-						return true
-					end,
 					Lua = {
 						workspace = { checkThirdParty = false },
 						telemetry = { enable = false },
