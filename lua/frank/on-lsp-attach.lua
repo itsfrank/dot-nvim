@@ -1,4 +1,4 @@
--- function to set up lsp-esque behavior when something providing LSP features attaches to a buffer (lspconfig & null-ls)
+-- function to set up lsp behavior when something providing LSP features attaches to a buffer (lspconfig)
 return function(client, bufnr)
 	-- lets us more easily define mappings specific
 	-- for LSP related items. It sets the mode, buffer and description for us each time.
@@ -6,8 +6,7 @@ return function(client, bufnr)
 		if desc then
 			desc = "LSP: " .. desc
 		end
-
-		vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = desc })
+		vim.keymap.set(mode, keys, func, { silent = true, buffer = bufnr, desc = desc })
 	end
 
 	-- map("n", "<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
@@ -38,13 +37,8 @@ return function(client, bufnr)
 		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 	end, "[W]orkspace [L]ist Folders")
 
-	-- Create a command `:Format` local to the LSP buffer
-	vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-		require("conform").format({ lsp_fallback = true })
-	end, { desc = "Format current buffer with LSP" })
-
-	-- cpp only
-	map("n", "<leader>ch", ":ClangdSwitchSourceHeader<cr>", "[C]langd switch source [H]eader")
+	-- clangd only
+	map("n", "<leade>ch", ":ClangdSwitchSourceHeader<cr>", "[C]langd switch source [H]eader")
 
 	-- Adds command `:FormatModifications`
 	local lsp_format_modifications = require("lsp-format-modifications")

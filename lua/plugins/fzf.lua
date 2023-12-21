@@ -33,6 +33,9 @@ return {
 					},
 				},
 			})
+
+			vim.keymap.set("n", "<leader>sf", ":FzfxFiles<cr>", { silent = true, desc = "[S]earch [F]iles" })
+			vim.keymap.set("n", "<leader>sg", ":FzfxLiveGrep<cr>", { silent = true, desc = "[S]earch by [G]rep" })
 		end,
 	},
 }
