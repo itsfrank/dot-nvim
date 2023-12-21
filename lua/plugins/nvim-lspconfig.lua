@@ -27,7 +27,7 @@ return {
 			---Used to intialize lsp servers, note that on_attach and capabilities are extracted and set to nil
 			---@class ServerConfig : lspconfig.Config
 			---@field no_mason? boolean dont use mason to manage the instalation of this server
-			---@field enabled? fun():boolean|boolean conditionally disable the lsp, runs once per session (wont disable if things change after start)
+			---@field enable? fun():boolean|boolean conditionally disable the lsp, runs once per session (wont disable if things change after start)
 			---@field capabilities? fun():any|any
 			---@field on_attach? fun():nil
 
