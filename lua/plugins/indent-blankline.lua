@@ -24,6 +24,7 @@ return {
             })
 
             require("ibl").setup({
+                enabled = false, -- start disabled, use `:IBLToggle` to turn on
                 indent = {
                     char = "┊",
                     highlight = "IblHighlight",
