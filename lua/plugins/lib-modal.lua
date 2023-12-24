@@ -1,12 +1,12 @@
 return {
-	{
-		"Iron-E/nvim-libmodal",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"rcarriga/nvim-dap-ui",
-		},
-		config = function()
-			require("frank.debug-layer").init()
-		end,
-	},
+    {
+        "Iron-E/nvim-libmodal",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "rcarriga/nvim-dap-ui",
+        },
+        config = function()
+            require("frank.debug-layer").init()
+        end,
+    },
 }

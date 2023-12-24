@@ -51,9 +51,9 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 
 if os_info:is_windows() then
-	vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
+    vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
 elseif os_info:is_mac() or os_info:is_linux() then
-	vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+    vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 end
 
 vim.opt.undofile = true
@@ -72,9 +72,9 @@ vim.o.completeopt = "menuone,noselect"
 -- make it so the yanked text is always highlighted
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-	group = highlight_group,
-	pattern = "*",
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = "*",
 })

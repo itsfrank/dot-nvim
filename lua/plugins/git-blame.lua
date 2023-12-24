@@ -1,4 +1,4 @@
 return {
-	-- GitLens in neovim
-	"f-person/git-blame.nvim",
+    -- GitLens in neovim
+    "f-person/git-blame.nvim",
 }

@@ -16,10 +16,10 @@ vim.keymap.set({ "n" }, "<M-O>", "O<esc>", { desc = "New line above" })
 -- formatting
 vim.keymap.set("n", "<leader>fta", ":Format<cr>", { silent = true, desc = "[F]orma[T] [A]ll - formats entire buffer" })
 vim.keymap.set(
-	"n",
-	"<leader>ftm",
-	":FormatModifications<cr>",
-	{ silent = true, desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
+    "n",
+    "<leader>ftm",
+    ":FormatModifications<cr>",
+    { silent = true, desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
 )
 
 -- system clipboard keymaps
@@ -47,24 +47,24 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 
 -- better window resize
 local function scale_current_win_height_fn(scale)
-	return function()
-		local height = vim.api.nvim_win_get_height(0)
-		local new_height = math.floor(height * scale)
-		if scale > 1 and height < 2 then
-			new_height = 2
-		end
-		vim.api.nvim_win_set_height(0, new_height)
-	end
+    return function()
+        local height = vim.api.nvim_win_get_height(0)
+        local new_height = math.floor(height * scale)
+        if scale > 1 and height < 2 then
+            new_height = 2
+        end
+        vim.api.nvim_win_set_height(0, new_height)
+    end
 end
 local function scale_current_win_width_fn(scale)
-	return function()
-		local width = vim.api.nvim_win_get_width(0)
-		local new_width = math.floor(width * scale)
-		if scale > 1 and width < 2 then
-			new_width = 2
-		end
-		vim.api.nvim_win_set_width(0, new_width)
-	end
+    return function()
+        local width = vim.api.nvim_win_get_width(0)
+        local new_width = math.floor(width * scale)
+        if scale > 1 and width < 2 then
+            new_width = 2
+        end
+        vim.api.nvim_win_set_width(0, new_width)
+    end
 end
 -- scale window by 1/3 of it's current size
 vim.keymap.set("n", "<M-=>", scale_current_win_width_fn(3 / 2), { desc = "Horizontally grow window by 1/3" })
@@ -74,8 +74,8 @@ vim.keymap.set("n", "<M-_>", scale_current_win_height_fn(2 / 3), { desc = "Verti
 
 -- plugin testing keymaps
 vim.keymap.set(
-	"n",
-	"<leader>rt",
-	"<Plug>PlenaryTestFile",
-	{ desc = "[R]un [T]ests - runs plenary tests in current file" }
+    "n",
+    "<leader>rt",
+    "<Plug>PlenaryTestFile",
+    { desc = "[R]un [T]ests - runs plenary tests in current file" }
 )
