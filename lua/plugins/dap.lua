@@ -30,16 +30,17 @@ local new_cpp_debug_config = function(exe_path, args)
 	}
 end
 
-local telescope_debug_launch = function()
+---@param make_config fun(selected:string, args:string[]|nil):any
+local telescope_debug_launch = function(make_config)
 	local dap = require("dap")
 	local actions_state = require("telescope.actions.state")
 	local actions = require("telescope.actions")
 
 	local exec_dap = function(prompt_bufnr, args)
 		local selected_entry = actions_state.get_selected_entry()
-		local cpp_config = new_cpp_debug_config(selected_entry.cwd .. "/" .. selected_entry[1], args)
+		local config = make_config(selected_entry.cwd .. "/" .. selected_entry[1], args)
 		actions.close(prompt_bufnr)
-		dap.run(cpp_config)
+		dap.run(config)
 	end
 
 	local get_args_exec = function(prompt_bufnr)
@@ -69,6 +70,39 @@ local telescope_debug_launch = function()
 	})
 end
 
+local local_lua_adapter = {
+	type = "executable",
+	command = "node",
+	args = {
+		"/Users/fobrien/tools/local-lua-debugger-vscode/extension/debugAdapter.js",
+	},
+	enrich_config = function(config, on_config)
+		if not config["extensionPath"] then
+			local c = vim.deepcopy(config)
+			-- 💀 If this is missing or wrong you'll see
+			-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
+			c.extensionPath = "/Users/fobrien/tools/local-lua-debugger-vscode/"
+			on_config(c)
+		else
+			on_config(config)
+		end
+	end,
+}
+
+local make_luals_debug_config = function(args)
+	local config = {
+		name = "Debug LuaLS test",
+		type = "local-lua",
+		request = "launch",
+		program = {
+			command = "/Users/fobrien/frk/lua-language-server/bin/lua-language-server",
+		},
+		args = args,
+		cwd = "${workspaceFolder}",
+	}
+	return config
+end
+
 return {
 	{
 		"mfussenegger/nvim-dap",
@@ -83,6 +117,7 @@ return {
 			require("dapui").setup()
 			require("nvim-dap-virtual-text").setup({})
 
+			dap.adapters["local-lua"] = local_lua_adapter
 			dap.adapters.lldb = lldb_adapter
 			dap.configurations.cpp = { new_cpp_debug_config() }
 
@@ -93,7 +128,14 @@ return {
 			)
 			vim.fn.sign_define("DapLogPoint", { text = "●", texthl = "class", linehl = "", numhl = "" })
 			vim.fn.sign_define("DapBreakpointRejected", { text = "●", texthl = "type", linehl = "", numhl = "" })
-			vim.api.nvim_create_user_command("LaunchDebugger", telescope_debug_launch, {})
+			vim.api.nvim_create_user_command("LaunchDebugger", function()
+				telescope_debug_launch(function(selected, args)
+					return new_cpp_debug_config(selected, args)
+				end)
+			end, {})
+			vim.api.nvim_create_user_command("LaunchDebuggerLuaLs", function()
+				require("dap").run(make_luals_debug_config({ "test.lua" }))
+			end, {})
 		end,
 	},
 }

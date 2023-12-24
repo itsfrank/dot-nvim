@@ -3,7 +3,7 @@ local iter = {}
 ---Execute predicate on all elements
 ---@generic T
 ---@param list T[]
----@param p fun(T):nil
+---@param p fun(v:T):nil
 function iter.for_each(list, p)
 	for _, v in ipairs(list) do
 		p(v)
@@ -13,8 +13,7 @@ end
 ---Join two lists into a list of 2-value lists
 ---List will have length of first list passed in
 ---If second list is shorter, pairs of {v, nil} are created
----@generic T
----@generic U
+---@generic T, U
 ---@param list T[]
 ---@param other U[]
 ---@return {[1]: T, [2]: U}[]
@@ -32,9 +31,9 @@ end
 
 ---Filter a list
 ---@generic T
----@param list T[]
----@param p fun(T):boolean
----@return T[]
+---@param list table<number, T>
+---@param p fun(v:T):boolean
+---@return table<any, T>
 function iter.filter(list, p)
 	local filtered = {}
 	for _, v in ipairs(list) do
@@ -45,11 +44,26 @@ function iter.filter(list, p)
 	return filtered
 end
 
+-- number[]
+local input = {1,2,3,4,5}
+
+local filtered = iter.filter(input, function(v)
+    return v % 2 == 0
+end)
+
+
+
+
+
+
+local f = filtered
+
+
+
 ---Map values in a list
----@generic T
----@generic U
+---@generic T, U
 ---@param list T[]
----@param p fun(T):U
+---@param p fun(v:T):U
 ---@return U[]
 function iter.map(list, p)
 	local mapped = {}
@@ -62,7 +76,7 @@ end
 ---Fold (reduce) values in list
 ---@generic T
 ---@param list T[]
----@param p fun(T, T):T fun(acc, value)
+---@param p fun(acc:T, v:T):T
 ---@return T
 function iter.fold(list, acc_init, p)
 	local acc = acc_init

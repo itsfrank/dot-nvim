@@ -25,7 +25,8 @@ vim.wo.signcolumn = "yes"
 -- Set colorscheme
 vim.o.termguicolors = true
 vim.opt.background = "dark"
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("rose-pine")
+-- vim.cmd.colorscheme("catppuccin")
 -- vim.cmd.colorscheme("oxocarbon")
 
 -- override cursor line nr so its the same color as other colors, otherwise with cursorline its distracting
@@ -40,6 +41,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+-- vim.opt.virtualedit = "all"
 
 vim.opt.smartindent = true
 

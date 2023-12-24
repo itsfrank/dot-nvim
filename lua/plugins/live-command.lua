@@ -4,7 +4,15 @@ return {
 		config = function()
 			require("live-command").setup({
 				commands = {
-					S = { cmd = "Subvert" }, -- must be defined before we import vim-abolish
+					-- preview macros
+					Macro = {
+						cmd = "norm",
+						-- This will transform ":5Reg a" into ":norm 5@a"
+						args = function(opts)
+							return (opts.count == -1 and "" or opts.count) .. "@" .. opts.args
+						end,
+						range = "",
+					},
 				},
 			})
 		end,
