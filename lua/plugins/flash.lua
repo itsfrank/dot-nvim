@@ -29,9 +29,10 @@ return {
                 callback = function()
                     if vim.g.colors_name == "rose-pine" then
                         local rose_pine_palette = require("rose-pine.palette")
-
-                        local label_hl = vim.api.nvim_get_hl_by_name("Substitute", true)
-                        label_hl.bg = rose_pine_palette.foam
+                        local label_hl = {
+                            fg = rose_pine_palette.base,
+                            bg = rose_pine_palette.foam,
+                        }
                         vim.api.nvim_set_hl(0, "FlashRosePineLabel", label_hl)
                         flash_setup_opts.highlight = {
                             groups = {

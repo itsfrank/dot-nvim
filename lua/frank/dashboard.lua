@@ -1,4 +1,4 @@
-local os_info = require("frank.os-info")
+local os_info = require("frank.utils.os-info")
 local neovim_ascii = {
     [[                               __                ]],
     [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
