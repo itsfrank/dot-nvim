@@ -16,7 +16,12 @@ local function set_keybinds()
         fire_layer_change()
     end, { desc = "Exit the debug keymap layer" })
 
-    m.layer:map("n", "<leader>de", ":LaunchDebugger<cr>", { desc = "Debug Executeable - select exe with telescope" })
+    m.layer:map(
+        "n",
+        "<leader>de",
+        ":LaunchDebuggerCppExe<cr>",
+        { desc = "Debug Executeable - select exe with telescope" }
+    )
     m.layer:map("n", "<leader>dui", require("dapui").toggle, { desc = "Debug: [D]ap [U][I] toggle" })
 
     local dap = require("dap")

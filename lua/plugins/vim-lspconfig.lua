@@ -16,7 +16,6 @@ return {
             require("mason").setup()
             require("fidget").setup()
 
-            local utils = require("frank.utils")
             local lspconfig = require("lspconfig")
 
             -- defaults passed to lspconfig (can be overriden in the lsp_servers list below)
@@ -79,10 +78,12 @@ return {
                 },
             }
 
+            local utils = require("frank.utils.misc")
+            local iter = require("frank.utils.iter")
             -- Ensure the servers above are installed (except thise with no_mason = true)
             local mason_lspconfig = require("mason-lspconfig")
             mason_lspconfig.setup({
-                ensure_installed = utils.list_filter(vim.tbl_keys(lsp_servers), function(server)
+                ensure_installed = iter.filter(vim.tbl_keys(lsp_servers), function(server)
                     return lsp_servers[server].no_mason ~= true
                 end),
             })

@@ -15,21 +15,6 @@ function utils.not_nil_or(v_or_nil, default)
     return v_or_nil
 end
 
----Filter a list
----@generic T
----@param list `T`[]
----@param p fun(T):boolean
----@return T[]
-function utils.list_filter(list, p)
-    local filtered = {}
-    for _, v in ipairs(list) do
-        if p(v) then
-            table.insert(filtered, v)
-        end
-    end
-    return filtered
-end
-
 function utils.find_buffer_by_name(name)
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         local buf_name = vim.api.nvim_buf_get_name(buf)

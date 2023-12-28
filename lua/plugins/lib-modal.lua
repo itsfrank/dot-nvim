@@ -6,7 +6,7 @@ return {
             "rcarriga/nvim-dap-ui",
         },
         config = function()
-            require("frank.debug-layer").init()
+            require("frank.debug.debug-layer").init()
         end,
     },
 }

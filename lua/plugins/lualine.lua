@@ -14,7 +14,7 @@ return {
             require("lualine").setup({
                 options = {
                     icons_enabled = false,
-                    theme = "catppuccin",
+                    theme = "rose-pine-alt",
                     component_separators = "|",
                     section_separators = "",
                 },
@@ -32,7 +32,7 @@ return {
                             icon = { "▊", align = "left" },
                             color = "LibmodalMode",
                             cond = function()
-                                local debug_layer = require("frank.debug-layer")
+                                local debug_layer = require("frank.debug.debug-layer")
                                 return debug_layer.layer:is_active()
                             end,
                         },

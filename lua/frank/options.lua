@@ -1,4 +1,4 @@
-local os_info = require("frank.os-info")
+local os_info = require("frank.utils.os-info")
 
 -- Set highlight on search
 vim.o.hlsearch = true
