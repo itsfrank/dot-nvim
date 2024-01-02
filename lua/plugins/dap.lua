@@ -27,9 +27,7 @@ return {
             dap.adapters.lldb = dap_cpp.lldb_adapter
 
             vim.api.nvim_create_user_command("LaunchDebuggerCppExe", function()
-                dap_utils.telescope_debug_launch({
-                    find_command = { "fd", "-HI", "-t", "x" }, -- find executables including in hidden folders (e.g. ./build)
-                }, function(selected, args)
+                dap_utils.telescope_debug_launch({}, function(selected, args)
                     return dap_cpp.new_cpp_debug_config(selected, args)
                 end)
             end, { desc = "Select a cpp exe with telescope and launch it with a debugger addached" })
