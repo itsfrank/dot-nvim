@@ -34,6 +34,7 @@
   "mason.nvim": { "branch": "main", "commit": "41e75af1f578e55ba050c863587cffde3556ffa6" },
   "mini.pairs": { "branch": "main", "commit": "552062017ff207e1f35f7028bfb3f27c7421d22d" },
   "mini.surround": { "branch": "main", "commit": "7bf8915ba15d7a4f3c2afe7868d3c15a858d73f1" },
+  "mini.test": { "branch": "main", "commit": "800a1bc086f761a03511e4075be5d930d59f8d69" },
   "neodev.nvim": { "branch": "main", "commit": "8526ce7de23e04735827a4e3f78ff634880181c5" },
   "nvim": { "branch": "main", "commit": "b901cf144573b293b6cefeb1ac8c97d5d239ee7a" },
   "nvim-cmp": { "branch": "main", "commit": "538e37ba87284942c1d76ed38dd497e54e65b891" },
