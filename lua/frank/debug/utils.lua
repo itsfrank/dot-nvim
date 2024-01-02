@@ -15,7 +15,7 @@ end
 ---@class TelescopeDebugLaunchOptions
 ---@field prompt_args? boolean #prompt user for args afte selecting executable, input will be split on spaces
 
----Select executables in a director with telescope
+---Select executable in a directory with telescope
 ---selected executable will be launched with debugger configuration
 ---@see TelescopeDebugLaunchOptions
 ---@param find_files_opts any #options to telescop find_files command
@@ -63,6 +63,7 @@ function dap_utils.telescope_debug_launch(find_files_opts, make_config, opts)
         actions.close(prompt_bufnr)
     end
 
+    find_files_opts.find_command = { "fd", "-HI", "-t", "x" } -- find executables including in hidden folders (e.g. ./build)
     find_files_opts.attach_mappings = function(_, map)
         map("n", "<cr>", telescope_callback)
         map("i", "<cr>", telescope_callback)
