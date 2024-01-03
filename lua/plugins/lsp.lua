@@ -13,7 +13,6 @@ return {
     config = function()
         require("neodev").setup({})
         require("mason").setup()
-        require("fidget").setup()
 
         local lspconfig = require("lspconfig")
 
@@ -58,6 +57,30 @@ return {
                         "clear",
                     },
                 },
+                handlers = {
+                    -- I get annoyed when gd opens a quickfix wiht all elements on the same line
+                    -- if that happens, just jump to the first one
+                    ["textDocument/definition"] = function(err, result, ctx, config)
+                        if vim.tbl_islist(result) and #result > 0 then
+                            local line = result[1].targetRange.start.line
+                            local file = result[1].targetUri
+
+                            local all_same = true
+                            for _, res in ipairs(result) do
+                                if res.targetRange.start.line ~= line or res.targetUri ~= file then
+                                    all_same = false
+                                    break
+                                end
+                            end
+                            if all_same then
+                                result = result[1]
+                            end
+                        end
+
+                        local rtn = vim.lsp.handlers["textDocument/definition"](err, result, ctx, config)
+                        return rtn
+                    end,
+                },
             },
             ocamllsp = {
                 no_mason = true,
@@ -91,16 +114,19 @@ return {
             local capabilities =
                 utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
             local on_attach = utils.not_nil_or(utils.get_or_function(server_settings.on_attach), default_on_attach)
+            local handlers = server_settings.handlers
 
             -- clean up before passing to lspconfig
             server_settings.capabilities = nil
             server_settings.on_attach = nil
             server_settings.enable = utils.get_or_function(server_settings.enable)
+            server_settings.handlers = nil
 
             lspconfig[server_name].setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
                 settings = server_settings,
+                handlers = handlers,
             })
         end
 
@@ -114,7 +140,9 @@ return {
 
         -- setup the no_mason servers
         for server_name, server_settings in pairs(lsp_servers) do
-            setup_server(server_name, server_settings)
+            if server_settings.no_mason == false then
+                setup_server(server_name, server_settings)
+            end
         end
     end,
 }
