@@ -7,12 +7,12 @@ return {
         config = function()
             require("rose-pine").setup({
                 before_highlight = function(group, highlight, palette)
-                    -- more contyrast for pine
+                    -- more contrast for pine
                     if highlight.fg == palette.pine then
                         highlight.fg = "#419abe"
                     end
 
-                    -- fix the faxt that search results are white, matching the cursor
+                    -- fix the search results being white, matching the cursor
                     if group == "Search" then
                         highlight.fg = palette.base
                         highlight.bg = palette.iris
