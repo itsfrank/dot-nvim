@@ -1,22 +1,18 @@
 return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
-    as = "harpoon",
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
     config = function()
         local harpoon = require("harpoon")
-        local oqt = require("frank.oqt")
 
         harpoon:setup({
             settings = {
                 save_on_toggle = true,
                 sync_on_ui_close = true,
             },
-            oqt = oqt.harppon_list_config,
         })
-        oqt.setup()
 
         vim.keymap.set("n", "<leader>hm", function()
             harpoon:list():append()
