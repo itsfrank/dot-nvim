@@ -7,5 +7,6 @@ return {
                 override_vim_notify = true,
             },
         })
+        fidget.notification.set_config("default", { info_style = "@label" }, true)
     end,
 }
