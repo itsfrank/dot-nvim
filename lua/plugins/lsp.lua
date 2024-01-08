@@ -23,7 +23,7 @@ return {
 
         ---Used to intialize lsp servers, note that on_attach and capabilities are extracted and set to nil
         ---@class ServerConfig : lspconfig.Config
-        ---@field no_mason? boolean dont use mason to manage the instalation of this server
+        ---@field use_mason? boolean dont install with mason if false, nil implies true
         ---@field enable? fun():boolean|boolean conditionally disable the lsp, runs once per session (wont disable if things change after start)
         ---@field capabilities? fun():any|any
         ---@field on_attach? fun():nil
@@ -83,7 +83,7 @@ return {
                 },
             },
             ocamllsp = {
-                no_mason = true,
+                use_mason = true,
                 filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
                 capabilities = function()
                     local c = default_capabilities
@@ -102,15 +102,16 @@ return {
 
         local utils = require("frank.utils.misc")
         local iter = require("frank.utils.iter")
-        -- Ensure the servers above are installed (except thise with no_mason = true)
+        -- Ensure the servers above are installed (except thise with use_mason = false)
         local mason_lspconfig = require("mason-lspconfig")
         mason_lspconfig.setup({
             ensure_installed = iter.filter(vim.tbl_keys(lsp_servers), function(server)
-                return lsp_servers[server].no_mason ~= true
+                return lsp_servers[server].use_mason ~= false
             end),
         })
 
-        local function setup_server(server_name, server_settings)
+        -- setup the servers
+        for server_name, server_settings in pairs(lsp_servers) do
             local capabilities =
                 utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
             local on_attach = utils.not_nil_or(utils.get_or_function(server_settings.on_attach), default_on_attach)
@@ -128,21 +129,6 @@ return {
                 settings = server_settings,
                 handlers = handlers,
             })
-        end
-
-        -- mason will set up our servers automatically
-        mason_lspconfig.setup_handlers({
-            function(server_name)
-                local server_settings = utils.not_nil_or(utils.get_or_function(lsp_servers[server_name]), {})
-                setup_server(server_name, server_settings)
-            end,
-        })
-
-        -- setup the no_mason servers
-        for server_name, server_settings in pairs(lsp_servers) do
-            if server_settings.no_mason == false then
-                setup_server(server_name, server_settings)
-            end
         end
     end,
 }
