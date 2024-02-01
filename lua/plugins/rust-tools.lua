@@ -3,7 +3,7 @@ return {
     ft = "rust",
     dependencies = "neovim/nvim-lspconfig",
     config = function()
-        local on_attach = require("frank.on-lsp-attach")
+        local on_attach = require("frank.lsp-on-attach")
 
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)

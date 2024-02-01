@@ -31,7 +31,7 @@ return function(client, bufnr)
 
     if client.name == "clangd" then
         -- hop between matching source and header files
-        keymap_set("n", "<leade>ch", ":ClangdSwitchSourceHeader<cr>", "[C]langd switch source [H]eader")
+        keymap_set("n", "<leader>ch", ":ClangdSwitchSourceHeader<cr>", "[C]langd switch source [H]eader")
     end
 
     -- Adds command `:FormatModifications`

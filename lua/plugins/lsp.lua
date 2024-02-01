@@ -9,6 +9,7 @@ return {
         "williamboman/mason-lspconfig.nvim",
         "j-hui/fidget.nvim",
         "folke/neodev.nvim",
+        "lopi-py/luau-lsp.nvim",
     },
     config = function()
         require("neodev").setup({})
@@ -27,18 +28,46 @@ return {
         ---@field enable? fun():boolean|boolean conditionally disable the lsp, runs once per session (wont disable if things change after start)
         ---@field capabilities? fun():any|any
         ---@field on_attach? fun():nil
+        ---@field custom_setup? fun():nil run this instead of default config function below, still respects enable and use_mason
 
         -- based on kickstart.nvim (see: https://github.com/nvim-lua/kickstart.nvim)
         -- however I support additional fields
         ---List of lsp servers that should be instaled and configuraton objects
-        ---@type (ServerConfig|fun():ServerConfig)[]
+        ---@type (ServerConfig|fun():ServerConfig)[] if function return nil, then all must be configured in the function
         local lsp_servers = {
             -- configure your lsp settings here, the table is used to intialize below
-            clangd = {},
+            clangd = {
+                filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+            },
             gopls = {},
             tsserver = {},
             pyright = {},
+            luau_lsp = {
+                filetypes = { "lua", "luau" },
+                enable = function() -- enable only in rojo projects
+                    local p_scandir = require("plenary.scandir")
+                    local found =
+                        p_scandir.scan_dir(vim.fn.getcwd(), { depth = 1, search_pattern = ".*%.project%.json" })
+                    return #found > 0
+                end,
+                custom_setup = function()
+                    require("luau-lsp").setup({
+                        server = {
+                            filetypes = { "luau", "lua" },
+                            capabilities = default_capabilities,
+                            on_attach = default_on_attach,
+                        },
+                    })
+                    lspconfig.luau_lsp.setup({})
+                end,
+            },
             lua_ls = {
+                enable = function() -- disable lua_ls in roblox projects
+                    local p_scandir = require("plenary.scandir")
+                    local found =
+                        p_scandir.scan_dir(vim.fn.getcwd(), { depth = 1, search_pattern = ".*%.project%.json" })
+                    return #found == 0
+                end,
                 Lua = {
                     format = { enable = false }, -- use stylua with conform instead
                     workspace = { checkThirdParty = false },
@@ -83,7 +112,7 @@ return {
                 },
             },
             ocamllsp = {
-                use_mason = true,
+                use_mason = false,
                 filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
                 capabilities = function()
                     local c = default_capabilities
@@ -112,23 +141,29 @@ return {
 
         -- setup the servers
         for server_name, server_settings in pairs(lsp_servers) do
-            local capabilities =
-                utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
-            local on_attach = utils.not_nil_or(utils.get_or_function(server_settings.on_attach), default_on_attach)
-            local handlers = server_settings.handlers
+            local loop = function() -- i need this because lua doesn't have `continue` :(
+                server_settings = utils.get_or_function(server_settings)
 
-            -- clean up before passing to lspconfig
-            server_settings.capabilities = nil
-            server_settings.on_attach = nil
-            server_settings.enable = utils.get_or_function(server_settings.enable)
-            server_settings.handlers = nil
+                server_settings.enable = utils.get_or_function(server_settings.enable)
+                if server_settings.enable == false then
+                    return
+                end
 
-            lspconfig[server_name].setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-                settings = server_settings,
-                handlers = handlers,
-            })
+                -- custom setup
+                if server_settings.custom_setup ~= nil then
+                    server_settings.custom_setup()
+                    return
+                end
+
+                -- default setup
+                server_settings.capabilities =
+                    utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
+                server_settings.on_attach =
+                    utils.not_nil_or(utils.get_or_function(server_settings.on_attach), default_on_attach)
+
+                lspconfig[server_name].setup(server_settings)
+            end
+            loop()
         end
     end,
 }

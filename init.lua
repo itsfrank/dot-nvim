@@ -30,3 +30,4 @@ require("lazy").setup("plugins", {
 
 require("frank.options")
 require("frank.keymaps")
+require("frank.commands")
