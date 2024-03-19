@@ -11,6 +11,10 @@ dap_cpp.lldb_adapter = {
 ---@param args string[]|nil #list of args to pass to executable under test
 function dap_cpp.new_cpp_debug_config(exe_path, args)
     args = args and args or {}
+    if type(args) == "string" then
+        args = { args }
+    end
+
     return {
         name = "Launch",
         type = "lldb",

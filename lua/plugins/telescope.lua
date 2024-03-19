@@ -4,12 +4,14 @@ return {
     branch = "0.1.x",
     dependencies = {
         "nvim-lua/plenary.nvim",
+        "Snikimonkd/telescope-git-conflicts.nvim",
     },
     config = function()
         local telescope = require("telescope")
         telescope.load_extension("dap")
         telescope.load_extension("workspaces")
         telescope.load_extension("aerial")
+        telescope.load_extension("conflicts")
 
         telescope.setup({
             defaults = {
@@ -56,11 +58,13 @@ return {
             { desc = "[ ] Find existing buffers" }
         )
         vim.keymap.set("n", "<leader>/", function()
-            require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-                winblend = 10,
-                previewer = false,
-                layout_config = { width = 0.8 },
-            }))
+            require("telescope.builtin").current_buffer_fuzzy_find()
         end, { desc = "[/] Fuzzily search in current buffer]" })
+        vim.keymap.set(
+            "n",
+            "<leader>gc",
+            ":Telescope conflicts<cr>",
+            { silent = true, desc = "Telescope [G]it [C]onflicts" }
+        )
     end,
 }

@@ -4,6 +4,7 @@ return {
     config = function()
         require("git-conflict").setup({
             default_mappings = false, -- disable buffer local mapping created by this plugin
+            disable_diagnostics = false,
         })
     end,
 }

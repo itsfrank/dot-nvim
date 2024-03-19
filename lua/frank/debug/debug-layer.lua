@@ -19,10 +19,15 @@ local function set_keybinds()
     m.layer:map(
         "n",
         "<leader>de",
-        ":LaunchDebuggerCppExe<cr>",
+        ":LaunchDebugCppExe<cr>",
         { desc = "Debug Executeable - select exe with telescope" }
     )
-    m.layer:map("n", "<leader>dui", require("dapui").toggle, { desc = "Debug: [D]ap [U][I] toggle" })
+    m.layer:map(
+        "n",
+        "<leader>dl",
+        ":LaunchDebugLast<cr>",
+        { desc = "Debug Last - re-run last debug session" }
+    )
 
     local dap = require("dap")
     m.layer:map("n", "I", dap.step_into, { desc = "Debug: Step [I]nto" })

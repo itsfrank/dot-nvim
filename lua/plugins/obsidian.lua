@@ -16,7 +16,9 @@ return {
         "hrsh7th/nvim-cmp",
         "nvim-telescope/telescope.nvim",
     },
+
     config = function()
+        ---@diagnostic disable-next-line
         require("obsidian").setup({
             open_app_foreground = true,
             workspaces = {
@@ -43,8 +45,10 @@ return {
                         suffix = suffix .. string.char(math.random(65, 90))
                     end
                 end
-                return tostring(os.time()) .. "-" .. suffix
+                -- return tostring(os.time()) .. "-" .. suffix
+                return suffix
             end,
+            ---@diagnostic disable-next-line
             ui = {
                 enable = true, -- set to false to disable all additional syntax features
                 update_debounce = 200, -- update delay after a text change (in milliseconds)
@@ -80,5 +84,12 @@ return {
                 },
             },
         })
+
+        vim.keymap.set(
+            "n",
+            "<leader>oqs",
+            ":ObsidianQuickSwitch<cr>",
+            { silent = true, desc = "[O]bsidian [Q]uick [S]witch" }
+        )
     end,
 }

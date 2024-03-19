@@ -12,8 +12,20 @@ local function str_split(inputstr, sep)
     return t
 end
 
+dap_utils._last_exec = nil
+
+function dap_utils.debug_last()
+    if dap_utils._last_exec == nil then
+        error("last exec is nil, you must debug something once before usinf debug_last")
+        return
+    end
+    local dap = require("dap")
+    dap.run(dap_utils._last_exec)
+end
+
 ---@class TelescopeDebugLaunchOptions
 ---@field prompt_args? boolean #prompt user for args afte selecting executable, input will be split on spaces
+---@field args? string[] #args passed to exe
 
 ---Select executable in a directory with telescope
 ---selected executable will be launched with debugger configuration
@@ -26,6 +38,7 @@ function dap_utils.telescope_debug_launch(find_files_opts, make_config, opts)
 
     local exec_dap = function(selected_exe, args)
         local config = make_config(selected_exe, args)
+        dap_utils._last_exec = config
         dap.run(config)
     end
 
@@ -57,6 +70,8 @@ function dap_utils.telescope_debug_launch(find_files_opts, make_config, opts)
             get_args_exec(function(args)
                 exec_dap(selected_exe, args)
             end)
+        elseif opts ~= nil and opts.args ~= nil then
+            exec_dap(selected_exe, opts.args)
         else
             exec_dap(selected_exe)
         end
