@@ -49,12 +49,17 @@ return {
                     return utils.is_luau_project(vim.fn.getcwd())
                 end,
                 custom_setup = function()
+                    local run_once = false
                     require("luau-lsp").setup({
                         server = {
                             filetypes = { "luau", "lua" },
                             capabilities = default_capabilities,
                             on_attach = function(client, bufnr)
                                 default_on_attach(client, bufnr)
+                                if run_once then
+                                    return
+                                end
+                                run_once = true
                                 vim.defer_fn(function()
                                     vim.cmd("e %")
                                 end, 500)
