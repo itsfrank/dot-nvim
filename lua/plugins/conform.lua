@@ -8,6 +8,7 @@ return {
             javascript = { { "prettierd", "prettier" } },
             json = { "fixjson" },
             lua = { "stylua" },
+            luau = { "stylua" },
             markdown = { "markdownlint" },
             ocaml = { "ocamlformat" },
             python = { "isort", "black" },

@@ -45,28 +45,41 @@ return {
             luau_lsp = {
                 filetypes = { "lua", "luau" },
                 enable = function() -- enable only in rojo projects
-                    local p_scandir = require("plenary.scandir")
-                    local found =
-                        p_scandir.scan_dir(vim.fn.getcwd(), { depth = 1, search_pattern = ".*%.project%.json" })
-                    return #found > 0
+                    local utils = require("frank.utils.misc")
+                    return utils.is_luau_project(vim.fn.getcwd())
                 end,
                 custom_setup = function()
                     require("luau-lsp").setup({
                         server = {
                             filetypes = { "luau", "lua" },
                             capabilities = default_capabilities,
-                            on_attach = default_on_attach,
+                            on_attach = function(client, bufnr)
+                                default_on_attach(client, bufnr)
+                                vim.defer_fn(function()
+                                    vim.cmd("e %")
+                                end, 500)
+                            end,
+                            sourcemap = {
+                                enable = false,
+                            },
+                            settings = {
+                                ["luau-lsp"] = {
+                                    require = {
+                                        mode = "relativeToFile",
+                                        directoryAliases = {
+                                            ["@lune"] = "~/.lune/.typedefs/0.8.2/",
+                                        },
+                                    },
+                                },
+                            },
                         },
                     })
-                    lspconfig.luau_lsp.setup({})
                 end,
             },
             lua_ls = {
                 enable = function() -- disable lua_ls in roblox projects
-                    local p_scandir = require("plenary.scandir")
-                    local found =
-                        p_scandir.scan_dir(vim.fn.getcwd(), { depth = 1, search_pattern = ".*%.project%.json" })
-                    return #found == 0
+                    local utils = require("frank.utils.misc")
+                    return not utils.is_luau_project(vim.fn.getcwd())
                 end,
                 Lua = {
                     format = { enable = false }, -- use stylua with conform instead

@@ -43,4 +43,11 @@ function utils.toggle_buffer(name, open, close)
     end
 end
 
+function utils.is_luau_project(dir)
+    local p_scandir = require("plenary.scandir")
+    local found_rojo = p_scandir.scan_dir(dir, { depth = 1, search_pattern = ".*%.project%.json" })
+    local found_luaurc = p_scandir.scan_dir(dir, { depth = 1, search_pattern = ".luaurc", hidden = true })
+    return #found_rojo > 0 or #found_luaurc > 0
+end
+
 return utils
