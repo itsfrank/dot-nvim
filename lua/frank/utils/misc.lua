@@ -50,4 +50,29 @@ function utils.is_luau_project(dir)
     return #found_rojo > 0 or #found_luaurc > 0
 end
 
+function utils.read_luaurc_aliases(dir)
+    local p = require("plenary.path")
+    local luaurc_path = p:new(dir, ".luaurc")
+    if not luaurc_path:exists() then
+        return nil
+    end
+
+    local luaurc_data = luaurc_path:read()
+    local luaurc = vim.json.decode(luaurc_data)
+
+    if luaurc == nil or luaurc["aliases"] == nil then
+        return nil
+    end
+    if type(luaurc["aliases"]) ~= "table" then
+        return nil
+    end
+
+    local aliases = luaurc["aliases"]
+    local ret = {}
+    for k, v in pairs(aliases) do
+        ret["@" .. k] = v
+    end
+    return ret
+end
+
 return utils

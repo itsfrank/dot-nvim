@@ -50,6 +50,8 @@ return {
                 end,
                 custom_setup = function()
                     local run_once = false
+
+                    local aliases = require("frank.utils.misc").read_luaurc_aliases(vim.fn.getcwd())
                     require("luau-lsp").setup({
                         server = {
                             filetypes = { "luau", "lua" },
@@ -71,9 +73,7 @@ return {
                                 ["luau-lsp"] = {
                                     require = {
                                         mode = "relativeToFile",
-                                        directoryAliases = {
-                                            ["@lune"] = "~/.lune/.typedefs/0.8.2/",
-                                        },
+                                        directoryAliases = aliases,
                                     },
                                 },
                             },
