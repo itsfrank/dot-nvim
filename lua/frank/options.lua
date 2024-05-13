@@ -25,7 +25,9 @@ vim.wo.signcolumn = "yes"
 -- Set colorscheme
 vim.o.termguicolors = true
 vim.opt.background = "dark"
+
 vim.cmd.colorscheme("rose-pine")
+-- vim.cmd.colorscheme("cyberdream")
 -- vim.cmd.colorscheme("catppuccin")
 -- vim.cmd.colorscheme("oxocarbon")
 

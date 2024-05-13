@@ -66,9 +66,6 @@ return {
                                     vim.cmd("e %")
                                 end, 500)
                             end,
-                            sourcemap = {
-                                enable = false,
-                            },
                             settings = {
                                 ["luau-lsp"] = {
                                     require = {
