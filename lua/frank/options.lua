@@ -87,3 +87,6 @@ vim.filetype.add({
         luau = "luau",
     },
 })
+
+-- add builtin plugins
+vim.cmd("packadd cfilter")
