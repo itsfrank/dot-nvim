@@ -48,7 +48,6 @@ return {
 
                 local current_buffer = vim.api.nvim_get_current_buf()
                 local buffer_name = vim.api.nvim_buf_get_name(current_buffer)
-                print("buff name: " .. buffer_name)
                 if string.find(buffer_name, "%[CodeCompanion%]") then
                     vim.cmd("set filetype=markdown")
                 end
