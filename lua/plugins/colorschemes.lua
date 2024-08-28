@@ -17,6 +17,19 @@ return {
                         highlight.fg = palette.base
                         highlight.bg = palette.iris
                     end
+
+                    if
+                        group == "markdownH1"
+                        or group == "markdownH2"
+                        or group == "markdownH3"
+                        or group == "markdownH4"
+                        or group == "markdownH5"
+                        or group == "markdownH6"
+                        or group == "@markup.heading"
+                        or group == "Title"
+                    then
+                        highlight.fg = palette.foam
+                    end
                 end,
             })
         end,
