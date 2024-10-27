@@ -1,5 +1,7 @@
 local os_info = require("frank.utils.os-info")
 
+vim.o.exrc = true
+
 -- Set highlight on search
 vim.o.hlsearch = true
 

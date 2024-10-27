@@ -43,11 +43,22 @@ function utils.toggle_buffer(name, open, close)
     end
 end
 
-function utils.is_luau_project(dir)
+local rbx_utils = require("frank.rbx_utils")
+function utils.is_project_json_present(dir)
     local p_scandir = require("plenary.scandir")
     local found_rojo = p_scandir.scan_dir(dir, { depth = 1, search_pattern = ".*%.project%.json" })
+    return #found_rojo > 0
+end
+
+function utils.is_luau_project(dir)
+    local p_scandir = require("plenary.scandir")
+    local found_rojo = utils.is_project_json_present(dir)
     local found_luaurc = p_scandir.scan_dir(dir, { depth = 1, search_pattern = ".luaurc", hidden = true })
-    return #found_rojo > 0 or #found_luaurc > 0
+
+    -- roblox engine repo paths
+    local is_rbx_luau = rbx_utils.is_rbx_lua_project(dir)
+
+    return found_rojo or #found_luaurc > 0 or is_rbx_luau
 end
 
 function utils.read_luaurc_aliases(dir)

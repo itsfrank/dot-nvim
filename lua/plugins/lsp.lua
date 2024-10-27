@@ -8,12 +8,16 @@ return {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         "j-hui/fidget.nvim",
-        "folke/neodev.nvim",
+        "folke/lazydev.nvim",
         "lopi-py/luau-lsp.nvim",
     },
     config = function()
-        require("neodev").setup({})
         require("mason").setup()
+        require("lazydev").setup({
+            enabled = function(root)
+                return true
+            end,
+        })
 
         local lspconfig = require("lspconfig")
 
@@ -41,51 +45,139 @@ return {
             },
             gopls = {},
             tsserver = {},
-            pyright = {},
+            bashls = {},
+            pylsp = {
+                settings = {
+                    pylsp = {
+                        plugins = {
+                            pycodestyle = {
+                                ignore = { "W391" },
+                                maxLineLength = 100,
+                            },
+                        },
+                    },
+                },
+            },
             luau_lsp = {
-                filetypes = { "lua", "luau" },
                 enable = function() -- enable only in rojo projects
                     local utils = require("frank.utils.misc")
                     return utils.is_luau_project(vim.fn.getcwd())
                 end,
                 custom_setup = function()
-                    local run_once = false
+                    vim.filetype.add({ extensions = { rbxp = "json" } })
+                    vim.filetype.add({
+                        extension = {
+                            lua = function(path)
+                                return path:match("%.nvim%.lua$") and "lua" or "luau"
+                            end,
+                        },
+                    })
 
-                    local aliases = require("frank.utils.misc").read_luaurc_aliases(vim.fn.getcwd())
+                    -- create the local type file if it does not exist
+                    -- this way if it gets changed, the lsp will reload
+                    local RBX_LOCAL_TYPES_PATH = "/tmp/rbxLocalTypes.d.luau"
+                    local rbxLocal = require("plenary.path"):new(RBX_LOCAL_TYPES_PATH)
+                    if not rbxLocal:exists() then
+                        rbxLocal:touch()
+                    end
+
+                    local utils = require("frank.utils.misc")
                     require("luau-lsp").setup({
+                        sourcemap = {
+                            enabled = true,
+                            autogenerate = utils.is_project_json_present(vim.fn.getcwd()),
+                        },
+                        types = {
+                            ---@type luau-lsp.RobloxSecurityLevel
+                            roblox_security_level = "RobloxScriptSecurity",
+                            definition_files = {
+                                RBX_LOCAL_TYPES_PATH,
+                            },
+                        },
                         server = {
                             filetypes = { "luau", "lua" },
-                            capabilities = default_capabilities,
+                            -- on_attach = default_on_attach,
+
                             on_attach = function(client, bufnr)
-                                default_on_attach(client, bufnr)
-                                if run_once then
+                                if vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t") == ".nvim.lua" then
+                                    client.stop()
                                     return
                                 end
-                                run_once = true
-                                vim.defer_fn(function()
-                                    vim.cmd("e %")
-                                end, 500)
+                                default_on_attach(client, bufnr)
                             end,
                             settings = {
                                 ["luau-lsp"] = {
                                     require = {
                                         mode = "relativeToFile",
-                                        directoryAliases = aliases,
+                                        directoryAliases = require("luau-lsp").aliases(),
                                     },
                                 },
                             },
+                            root_dir = function(path)
+                                return vim.fs.root(path, function(name)
+                                    return name:match(".+%.project%.json$")
+                                end) or vim.fs.root(path, {
+                                    ".git",
+                                    ".luaurc",
+                                    "stylua.toml",
+                                    "selene.toml",
+                                    "selene.yml",
+                                    "default.rbxp", -- internal projects
+                                })
+                            end,
                         },
                     })
                 end,
             },
             lua_ls = {
-                enable = function() -- disable lua_ls in roblox projects
+                -- enable = function() -- disable lua_ls in roblox projects
+                --     local utils = require("frank.utils.misc")
+                --     return not utils.is_luau_project(vim.fn.getcwd())
+                -- end,
+                on_attach = function(client, bufnr)
                     local utils = require("frank.utils.misc")
-                    return not utils.is_luau_project(vim.fn.getcwd())
+                    local is_luau = utils.is_luau_project(vim.fn.getcwd())
+
+                    if is_luau then
+                        if vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t") ~= ".nvim.lua" then
+                            client.stop()
+                            return
+                        end
+                    end
+                    default_on_attach(client, bufnr)
                 end,
+                root_dir = function(path)
+                    if vim.fn.fnamemodify(path, ":t") == ".nvim.lua" then
+                        return false
+                    end
+                    require("lspconfig.server_configurations.lua_ls").default_config.root_dir(path)
+                end,
+                -- root_dir = (function()
+                --     local utils = require("frank.utils.misc")
+                --     local is_luau = utils.is_luau_project(vim.fn.getcwd())
+                --     if is_luau then -- lua_ls should only be used for .nvim.lua files in luau projects
+                --         return function()
+                --             return false
+                --         end
+                --     end
+                --
+                --     return nil
+                -- end)(),
                 Lua = {
                     format = { enable = false }, -- use stylua with conform instead
-                    workspace = { checkThirdParty = false },
+                    workspace = {
+                        checkThirdParty = false,
+                        ignoreDir = {
+                            "Client",
+                            "Client/*",
+                            "Client/**",
+                            "Client/**/*.lua",
+                            "*.lua",
+                        },
+                        library = {
+                            vim.env.VIMRUNTIME,
+                        },
+                    },
                     telemetry = { enable = false },
                     diagnostics = {
                         disable = { "missing-fields" },
@@ -156,29 +248,22 @@ return {
 
         -- setup the servers
         for server_name, server_settings in pairs(lsp_servers) do
-            local loop = function() -- i need this because lua doesn't have `continue` :(
-                server_settings = utils.get_or_function(server_settings)
+            server_settings = utils.get_or_function(server_settings)
 
-                server_settings.enable = utils.get_or_function(server_settings.enable)
-                if server_settings.enable == false then
-                    return
-                end
+            server_settings.enable = utils.get_or_function(server_settings.enable)
+            if server_settings.enable ~= false then
+                if server_settings.custom_setup == nil then
+                    -- default setup
+                    server_settings.capabilities =
+                        utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
+                    server_settings.on_attach = utils.not_nil_or(server_settings.on_attach, default_on_attach)
 
-                -- custom setup
-                if server_settings.custom_setup ~= nil then
+                    lspconfig[server_name].setup(server_settings)
+                else
+                    -- custom setup
                     server_settings.custom_setup()
-                    return
                 end
-
-                -- default setup
-                server_settings.capabilities =
-                    utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
-                server_settings.on_attach =
-                    utils.not_nil_or(utils.get_or_function(server_settings.on_attach), default_on_attach)
-
-                lspconfig[server_name].setup(server_settings)
             end
-            loop()
         end
     end,
 }

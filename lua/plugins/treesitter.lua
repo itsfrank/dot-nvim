@@ -50,6 +50,7 @@ return {
                         ["if"] = "@function.inner",
                         ["ac"] = "@class.outer",
                         ["ic"] = "@class.inner",
+                        ["ib"] = "@codeblock.inner",
                     },
                 },
                 move = {

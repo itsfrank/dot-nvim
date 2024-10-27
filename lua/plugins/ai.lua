@@ -28,6 +28,11 @@ return {
         config = function()
             local codecompanion = require("codecompanion")
             codecompanion.setup({
+                strategies = {
+                    chat = {
+                        adapter = "anthropic",
+                    },
+                },
                 opts = {
                     system_prompt = custom_prompt,
                 },

@@ -1,3 +1,66 @@
+--[[
+{
+  border = true,
+  borderchars = {
+    preview = { "▀", "▐", "▄", "▌", "▛", "▜", "▟", "▙" },
+    prompt = { "▀", "▐", "▄", "▌", "▛", "▜", "▟", "▙" },
+    results = { " ", "▐", "▄", "▌", "▌", "▐", "▟", "▙" }
+  },
+  buffer_previewer_maker = <function 1>,
+  cache_picker = {
+    limit_entries = 1000,
+    num_pickers = 1
+  },
+  color_devicons = true,
+  cycle_layout_list = { "horizontal", "vertical" },
+  dynamic_preview_title = false,
+  entry_prefix = " ",
+  file_previewer = <function 2>,
+  file_sorter = <function 3>,
+  generic_sorter = <function 3>,
+  get_selection_window = <function 4>,
+  get_status_text = <function 5>,
+  grep_previewer = <function 6>,
+  history = {
+    handler = <function 7>,
+    limit = 100,
+    path = "/Users/fobrien/.local/share/nvim/telescope_history"
+  },
+  hl_result_eol = true,
+  initial_mode = "insert",
+  layout_config = {
+    bottom_pane = {
+      height = 25,
+      preview_cutoff = 120,
+      prompt_position = "top"
+    },
+    center = {
+      height = 0.4,
+      preview_cutoff = 40,
+      prompt_position = "top",
+      width = 0.5
+    },
+    cursor = {
+      height = 0.9,
+      preview_cutoff = 40,
+      width = 0.8
+    },
+    horizontal = {
+      height = 0.9,
+      preview_cutoff = 120,
+      preview_width = 0.55,
+      prompt_position = "top",
+      width = 0.8
+    },
+    vertical = {
+      height = 0.9,
+      preview_cutoff = 40,
+      prompt_position = "bottom",
+      width = 0.8
+    }
+  },
+]]
+--
 return {
     -- Fuzzy Finder (files, lsp, etc)
     "nvim-telescope/telescope.nvim",
@@ -28,6 +91,13 @@ return {
                     n = {
                         ["<C-h>"] = "which_key",
                     },
+                },
+                layout_config = { prompt_position = "top" },
+                sorting_strategy = "ascending",
+                borderchars = {
+                    preview = { "▀", "▐", "▄", "▌", "▛", "▜", "▟", "▙" },
+                    prompt = { "▀", "▐", "▄", "▌", "▛", "▜", "▟", "▙" },
+                    results = { " ", "▐", "▄", "▌", "▌", "▐", "▟", "▙" },
                 },
             },
         })
@@ -66,5 +136,21 @@ return {
             ":Telescope conflicts<cr>",
             { silent = true, desc = "Telescope [G]it [C]onflicts" }
         )
+
+        -- styling
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            callback = function()
+                local caret_color = vim.api.nvim_get_hl(0, { name = "Conditional" })
+                local telescope_overrides = {
+                    TelescopeBorder = { fg = "bg" },
+                    TelescopeSelectionCaret = { fg = caret_color.fg },
+                    TelescopePromptPrefix = { fg = caret_color.fg },
+                }
+
+                for hl, col in pairs(telescope_overrides) do
+                    vim.api.nvim_set_hl(0, hl, col)
+                end
+            end,
+        })
     end,
 }

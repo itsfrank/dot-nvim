@@ -13,7 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- important! set leaderkey before loading plugins
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = ","
 
 -- Keymap for better default experience
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })

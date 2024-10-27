@@ -15,7 +15,7 @@ return {
         })
 
         vim.keymap.set("n", "<leader>hm", function()
-            harpoon:list():append()
+            harpoon:list():add()
         end, { desc = "[H]arpoon [M]ark" })
 
         vim.keymap.set("n", "<leader>hv", function()
@@ -34,6 +34,11 @@ return {
             vim.keymap.set("n", "<leader>h" .. tostring(i), function()
                 harpoon:list():select(i)
             end, { desc = "[H]arpoon jump to mark #" .. tostring(i) })
+
+            vim.keymap.set("n", "<leader>hh" .. tostring(i), function()
+                harpoon:list():select(i)
+                vim.cmd("ClangdSwitchSourceHeader")
+            end, { desc = "[H]arpoon [H]eader jump to mark #" .. tostring(i) .. " - meant for cpp files" })
         end
     end,
 }

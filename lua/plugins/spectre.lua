@@ -4,7 +4,7 @@ return { -- cool search plugin kinda like vscodes global search
     config = function()
         vim.keymap.set(
             "n",
-            "<leader>sp",
+            "<leader>SP",
             require("spectre").toggle,
             { desc = "Toggle [S][P]ectre - project find/replace" }
         )
