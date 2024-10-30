@@ -79,3 +79,12 @@ vim.keymap.set(
     "<Plug>PlenaryTestFile",
     { desc = "[R]un [T]ests - runs plenary tests in current file" }
 )
+
+-- lua run utility
+-- if curent file contains a function called _nvim_runme it will get called
+vim.keymap.set(
+    "n",
+    "<leader>lr",
+    ":so<cr>:lua _nvim_runme()<cr>",
+    { desc = "[L]ua [R]un - source & run function _nvim_runme" }
+)

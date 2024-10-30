@@ -10,6 +10,7 @@ return {
         "j-hui/fidget.nvim",
         "folke/lazydev.nvim",
         "lopi-py/luau-lsp.nvim",
+        "Bilal2453/luvit-meta", -- libuv typings
     },
     config = function()
         require("mason").setup()
@@ -17,6 +18,9 @@ return {
             enabled = function(root)
                 return true
             end,
+            library = {
+                "luvit-meta/library",
+            },
         })
 
         local lspconfig = require("lspconfig")
