@@ -20,13 +20,13 @@ return {
             yaml = { "yamlfmt" },
         }
 
-        conform.formatters["stylua"] = {
-            prepend_args = { "--indent-type=Spaces" },
-        }
         conform.formatters["shfmt"] = {
             prepend_args = { "--case-indent" },
         }
 
+        conform.formatters["stylua"] = {
+            prepend_args = { "--indent-type=Spaces" },
+        }
         -- roblox has poor taste in whitespace
         if require("frank.rbx_utils").is_rbx_lua_project(vim.fn.getcwd()) then
             conform.formatters["stylua"] = { prepend_args = {} }
