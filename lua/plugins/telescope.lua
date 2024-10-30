@@ -21,8 +21,8 @@ return {
                         ["<C-j>"] = "move_selection_next",
                         ["<C-k>"] = "move_selection_previous",
                         -- tab/s-tab to navigate instead of selecting
-                        ["<tab>"] = "move_selection_previous",
-                        ["<S-tab>"] = "move_selection_next",
+                        ["<tab>"] = "move_selection_next",
+                        ["<S-tab>"] = "move_selection_previous",
                         ["<C-h>"] = "which_key",
                     },
                     n = {
