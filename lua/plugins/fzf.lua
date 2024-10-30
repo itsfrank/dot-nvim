@@ -32,7 +32,7 @@ return {
                     },
                 },
                 defaults = {
-                    git_icons = true,
+                    -- git_icons = true,
                     file_icons = true,
                 },
             })
