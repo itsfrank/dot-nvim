@@ -68,7 +68,7 @@ vim.opt.scrolloff = 8
 vim.opt.isfname:append("@-@")
 
 -- dont log lsp stuff (set to "debug" when you want them)
-vim.lsp.set_log_level("off")
+vim.lsp.set_log_level("debug")
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"
@@ -81,13 +81,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
     group = highlight_group,
     pattern = "*",
-})
-
--- add filetypes to detect
-vim.filetype.add({
-    extension = {
-        luau = "luau",
-    },
 })
 
 -- add builtin plugins
