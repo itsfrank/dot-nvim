@@ -31,7 +31,7 @@ return {
                     vim.keymap.set("t", "<c-t><c-t>", function()
                         vim.api.nvim_command("q")
                     end, { silent = true, desc = "[T]oggle [T]erm" })
-                    vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { silent = true, desc = "[T]oggle [T]erm" })
+                    vim.keymap.set("t", "<c-t><esc>", [[<C-\><C-n>]], { silent = true, desc = "[T]oggle [T]erm" })
                 end,
             })
 
