@@ -13,9 +13,9 @@ return {
         require("nvim-dap-virtual-text").setup({})
 
         vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "error", linehl = "", numhl = "" })
-        vim.fn.sign_define("DapBreakpointCondition", { text = "●", texthl = "character", linehl = "", numhl = "" })
-        vim.fn.sign_define("DapLogPoint", { text = "●", texthl = "class", linehl = "", numhl = "" })
-        vim.fn.sign_define("DapBreakpointRejected", { text = "●", texthl = "type", linehl = "", numhl = "" })
+        vim.fn.sign_define("DapBreakpointCondition", { text = "●", texthl = "@character", linehl = "", numhl = "" })
+        vim.fn.sign_define("DapLogPoint", { text = "●", texthl = "@type", linehl = "", numhl = "" })
+        vim.fn.sign_define("DapBreakpointRejected", { text = "●", texthl = "@function", linehl = "", numhl = "" })
 
         local dap_utils = require("frank.debug.utils")
 

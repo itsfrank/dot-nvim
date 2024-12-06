@@ -68,7 +68,7 @@ vim.opt.scrolloff = 8
 vim.opt.isfname:append("@-@")
 
 -- dont log lsp stuff (set to "debug" when you want them)
-vim.lsp.set_log_level("debug")
+vim.lsp.set_log_level("WARN")
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"
