@@ -61,6 +61,22 @@ function utils.is_luau_project(dir)
     return found_rojo or #found_luaurc > 0 or is_rbx_luau
 end
 
+---removes duplicate elements in a list
+---@generic T
+---@param l T[]
+---@return T[]
+function utils.remove_duplicates(l)
+    local map = {}
+    local ret = {}
+    for _, v in ipairs(l) do
+        if map[v] == nil then
+            map[v] = true
+            table.insert(ret, v)
+        end
+    end
+    return ret
+end
+
 function utils.read_luaurc_aliases(dir)
     local p = require("plenary.path")
     local luaurc_path = p:new(dir, ".luaurc")

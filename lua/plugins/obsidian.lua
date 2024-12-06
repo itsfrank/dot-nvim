@@ -17,6 +17,7 @@ return {
         "nvim-telescope/telescope.nvim",
     },
 
+    enabled = false, -- obsidian isnt set up on this machine
     config = function()
         ---@diagnostic disable-next-line
         require("obsidian").setup({

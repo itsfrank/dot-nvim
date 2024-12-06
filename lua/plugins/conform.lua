@@ -2,23 +2,43 @@ return {
     "stevearc/conform.nvim",
     dependencies = {
         "lewis6991/gitsigns.nvim", -- for format modifications
+        "williamboman/mason.nvim",
+        "LittleEndianRoot/mason-conform",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     config = function()
+        -- inverse of conform's formatters_by_ft
+        local formatters = {
+            prettier = { ft = { "javascript" } },
+            fixjson = { ft = { "json" } },
+            stylua = { ft = { "lua", "luau" } },
+            markdownlint = { ft = { "markdown" } },
+            black = { ft = { "python" } },
+            rustfmt = { ft = { "rust" } },
+            shfmt = { ft = { "sh" } },
+            yamlfmt = { ft = { "yaml" } },
+            ocamlformat = { ft = { "ocaml" }, auto_install = false },
+            nixfmt = { ft = { "nix" }, auto_install = false },
+        }
+
+        local formatters_by_ft = {}
+        local formatters_to_install = {}
+        for fm, v in pairs(formatters) do
+            if v.auto_install ~= false then
+                table.insert(formatters_to_install, fm)
+            end
+            for _, ft in ipairs(v.ft) do
+                if formatters_by_ft[ft] == nil then
+                    formatters_by_ft[ft] = {}
+                end
+                table.insert(formatters_by_ft[ft], fm)
+            end
+        end
+
         local conform = require("conform")
         conform.setup({})
-
-        conform.formatters_by_ft = {
-            javascript = { "prettierd", "prettier" },
-            json = { "fixjson" },
-            lua = { "stylua" },
-            luau = { "stylua" },
-            markdown = { "markdownlint" },
-            ocaml = { "ocamlformat" },
-            python = { "isort", "black" },
-            rustfmt = { "rust" },
-            sh = { "shfmt" },
-            yaml = { "yamlfmt" },
-        }
+        conform.formatters_by_ft = formatters_by_ft
+        require("mason-tool-installer").setup({ ensure_installed = formatters_to_install })
 
         conform.formatters["shfmt"] = {
             prepend_args = { "--case-indent" },
@@ -47,28 +67,5 @@ return {
         vim.api.nvim_create_user_command("Format", function()
             conform.format({ lsp_fallback = true })
         end, { desc = "Format the current buffer" })
-
-        local function format_modifications()
-            local hunks = require("gitsigns").get_hunks()
-            local format = require("conform").format
-            for i = #hunks, 1, -1 do
-                local hunk = hunks[i]
-                if hunk ~= nil and hunk.type ~= "delete" then
-                    local start = hunk.added.start
-                    local last = start + hunk.added.count
-                    -- nvim_buf_get_lines uses zero-based indexing -> subtract from last
-                    local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
-                    local range = { start = { start, 0 }, ["end"] = { last - 1, last_hunk_line:len() } }
-                    format({ range = range })
-                end
-            end
-        end
-
-        vim.keymap.set(
-            "n",
-            "<leader>ftt",
-            format_modifications,
-            { silent = true, desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
-        )
     end,
 }

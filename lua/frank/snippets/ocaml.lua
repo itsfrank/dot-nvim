@@ -12,8 +12,15 @@ function m.load()
         t({ " *)" }),
     })
 
+    local snip_inline_test_case = s("tcase", {
+        t('let%test "'),
+        i(0),
+        t({ '" = ' }),
+    })
+
     ls.add_snippets("ocaml", {
         snip_comment,
+        snip_inline_test_case,
     })
 end
 
