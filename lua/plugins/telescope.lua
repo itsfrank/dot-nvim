@@ -73,6 +73,12 @@ return {
             ":Telescope conflicts<cr>",
             { silent = true, desc = "Telescope [G]it [C]onflicts" }
         )
+        vim.keymap.set(
+            "n",
+            "<leader>gs",
+            ":Telescope git_status<cr>",
+            { silent = true, desc = "Telescope [G]it [S]tatus" }
+        )
 
         -- styling
         vim.api.nvim_create_autocmd("ColorScheme", {
