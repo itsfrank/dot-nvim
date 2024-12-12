@@ -13,7 +13,6 @@ return {
         "Bilal2453/luvit-meta", -- libuv typings
     },
     config = function()
-        require("mason").setup()
         require("lazydev").setup({
             enabled = function(root)
                 return true
