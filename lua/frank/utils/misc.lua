@@ -69,7 +69,6 @@ function utils.find_lune_defs()
     local home = vim.fn.expand("~")
     local lune_path = p_path:new(home, ".lune/.typedefs")
     if not lune_path:is_dir() then
-        print("not dir")
         return nil
     end
     local folders = p_scandir.scan_dir(lune_path.filename, { only_dirs = true, depth = 1 })
@@ -80,7 +79,6 @@ function utils.find_lune_defs()
         local parts = p:_split()
         local name = parts[#parts]
         local ver = semver(name)
-        print(name, ver)
         if ver > largest_ver then
             largest = p:absolute()
             largest_ver = ver
