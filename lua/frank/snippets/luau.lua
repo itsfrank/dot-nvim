@@ -12,8 +12,14 @@ function m.load()
         t("()"),
         t({ "", "end" }),
     })
+    local snip_req = s("req", {
+        t('local _ = require("'),
+        i(0),
+        t('")'),
+    })
     ls.add_snippets("luau", {
         snip_fun,
+        snip_req,
     })
 end
 
