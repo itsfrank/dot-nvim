@@ -112,7 +112,17 @@ return {
                                 ["luau-lsp"] = {
                                     require = {
                                         mode = "relativeToFile",
-                                        directoryAliases = require("luau-lsp").aliases(),
+                                        directoryAliases = (function()
+                                            local aliases = require("luau-lsp").aliases()
+                                            if aliases == nil then
+                                                aliases = {}
+                                            end
+                                            local lune_path = utils.find_lune_defs()
+                                            if lune_path ~= nil then
+                                                aliases["@lune"] = lune_path
+                                            end
+                                            return aliases
+                                        end)(),
                                     },
                                 },
                             },

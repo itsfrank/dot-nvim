@@ -61,6 +61,34 @@ function utils.is_luau_project(dir)
     return found_rojo or #found_luaurc > 0 or is_rbx_luau
 end
 
+function utils.find_lune_defs()
+    local semver = require("frank.utils.semver")
+    local p_path = require("plenary.path")
+    local p_scandir = require("plenary.scandir")
+
+    local home = vim.fn.expand("~")
+    local lune_path = p_path:new(home, ".lune/.typedefs")
+    if not lune_path:is_dir() then
+        print("not dir")
+        return nil
+    end
+    local folders = p_scandir.scan_dir(lune_path.filename, { only_dirs = true, depth = 1 })
+    local largest, largest_ver = nil, semver(0, 0, 0)
+
+    for _, p in ipairs(folders) do
+        local p = p_path:new(p)
+        local parts = p:_split()
+        local name = parts[#parts]
+        local ver = semver(name)
+        print(name, ver)
+        if ver > largest_ver then
+            largest = p:absolute()
+            largest_ver = ver
+        end
+    end
+    return largest
+end
+
 ---removes duplicate elements in a list
 ---@generic T
 ---@param l T[]
