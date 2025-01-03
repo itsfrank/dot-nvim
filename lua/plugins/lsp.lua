@@ -43,12 +43,11 @@ return {
         ---@type (ServerConfig|fun():ServerConfig)[] if function return nil, then all must be configured in the function
         local lsp_servers = {
             -- configure your lsp settings here, the table is used to intialize below
-            clangd = {
-                filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
-            },
+            clangd = { filetypes = { "c", "cpp", "objc", "objcpp", "cuda" } },
             gopls = {},
             tsserver = {},
             bashls = {},
+            zls = {},
             pylsp = {
                 settings = {
                     pylsp = {
