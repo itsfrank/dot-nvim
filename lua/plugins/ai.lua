@@ -26,6 +26,7 @@ return {
             },
         },
         config = function()
+            local win_width = 0.4
             local codecompanion = require("codecompanion")
             codecompanion.setup({
                 strategies = {
@@ -39,7 +40,7 @@ return {
                 display = {
                     chat = {
                         window = {
-                            width = 0.35,
+                            width = win_width,
                         },
                     },
                 },
@@ -103,9 +104,7 @@ return {
                 codecompanion.toggle()
 
                 vim.cmd("wincmd L")
-                vim.cmd(
-                    "vertical resize " .. math.floor(vim.o.columns * codecompanion.config.display.chat.window.width)
-                )
+                vim.cmd("vertical resize " .. math.floor(vim.o.columns * win_width))
 
                 local current_buffer = vim.api.nvim_get_current_buf()
                 local buffer_name = vim.api.nvim_buf_get_name(current_buffer)
