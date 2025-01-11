@@ -12,8 +12,23 @@ return {
         })
 
         vim.keymap.set({ "n", "t" }, "<m-q>", function()
-            print("hi")
-            snacks.terminal.toggle()
+            local win, created = snacks.terminal.get()
+            if win then
+                win.opts.height = 20
+            end
+            if not created then
+                snacks.terminal.toggle()
+            end
+        end)
+
+        vim.keymap.set({ "n", "t" }, "<m-Q>", function()
+            local win, created = snacks.terminal.get(nil, { win = { height = 0 } })
+            if win then
+                win.opts.height = 0
+            end
+            if not created then
+                snacks.terminal.toggle(nil, { win = { height = 0 } })
+            end
         end)
     end,
 }
