@@ -19,10 +19,14 @@ return function(client, bufnr)
 
     keymap_set("n", "gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
     keymap_set("n", "gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    keymap_set("n", "gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences - with fuzzy finder")
     keymap_set("n", "gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
     keymap_set("n", "<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
-    keymap_set("n", "<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+    -- keymap_set("n", "gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences - with fuzzy finder")
+    -- keymap_set("n", "<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+    -- keymap_set("n", "<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+    local snacks = require("snacks")
+    keymap_set("n", "gr", snacks.picker.lsp_references, "[G]oto [R]eferences - with fuzzy finder")
+    keymap_set("n", "<leader>ds", snacks.picker.lsp_symbols, "[D]ocument [S]ymbols")
     keymap_set("n", "<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
     -- See `:help K` for why this keymap

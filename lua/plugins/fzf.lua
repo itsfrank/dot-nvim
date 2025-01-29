@@ -37,7 +37,8 @@ return {
                 },
             })
 
-            vim.keymap.set("n", "<leader>sf", ":FzfLua files<cr>", { silent = true, desc = "[S]earch [F]iles" })
+            -- trying out snacks.picker
+            -- vim.keymap.set("n", "<leader>sf", ":FzfLua files<cr>", { silent = true, desc = "[S]earch [F]iles" })
             vim.keymap.set("n", "<leader>sg", ":FzfLua live_grep<cr>", { silent = true, desc = "[S]earch by [G]rep" })
         end,
     },

@@ -4,13 +4,39 @@ return {
     config = function()
         local snacks = require("snacks")
         snacks.setup({
-            terminal = {
-                -- your terminal configuration comes here
-                -- or leave it empty to use the default settings
-                -- refer to the configuration section below
+            picker = {
+                -- I like tab/s-tab to move up/down
+                win = {
+                    input = {
+                        keys = {
+                            ["<Tab>"] = { "list_down", mode = { "i", "n" } },
+                            ["<S-Tab>"] = { "list_up", mode = { "i", "n" } },
+                        },
+                    },
+                    list = {
+                        keys = {
+
+                            ["<Tab>"] = { "list_down", mode = { "i", "n" } },
+                            ["<S-Tab>"] = { "list_up", mode = { "i", "n" } },
+                        },
+                    },
+                },
             },
+            terminal = {},
         })
 
+        -- picker
+        vim.keymap.set("n", "<leader>sf", snacks.picker.files, { silent = true, desc = "[S]earch [F]iles" })
+
+        vim.keymap.set("n", "<leader>gc", function()
+            snacks.picker.files({ cmd = "git", args = { "--no-pager", "diff", "--name-only", "--diff-filter=U" } })
+        end, { silent = true, desc = "Pick [G]it [C]onflicts" })
+
+        vim.keymap.set("n", "<leader>/", snacks.picker.lines, { desc = "[/] fuzzy search current buffer]" })
+        vim.keymap.set("n", "<leader>pp", snacks.picker.pickers, { desc = "[P]ick [P]ickers" })
+        vim.keymap.set("n", "<leader>km", snacks.picker.keymaps, { desc = "[K]ey[M]aps" })
+
+        -- terminal
         vim.keymap.set({ "n", "t" }, "<m-q>", function()
             local win, created = snacks.terminal.get()
             if win then
