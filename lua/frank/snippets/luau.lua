@@ -13,10 +13,8 @@ function m.load()
         t({ "", "end" }),
     })
     local snip_req = s("req", {
-        t("local "),
+        t('require("'),
         i(0),
-        t(' = require("'),
-        i(1),
         t('")'),
     })
     ls.add_snippets("luau", {
