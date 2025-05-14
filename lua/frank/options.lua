@@ -68,6 +68,8 @@ vim.opt.incsearch = true
 vim.opt.scrolloff = 8
 vim.opt.isfname:append("@-@")
 
+vim.diagnostic.config({ virtual_text = true })
+
 -- dont log lsp stuff (set to "debug" when you want them)
 vim.lsp.set_log_level("WARN")
 

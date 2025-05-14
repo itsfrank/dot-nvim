@@ -26,7 +26,11 @@ return {
         })
 
         -- picker
-        vim.keymap.set("n", "<leader>sf", snacks.picker.files, { silent = true, desc = "[S]earch [F]iles" })
+        vim.keymap.set("n", "<leader>sf", function()
+            snacks.picker.files({
+                layout = { preview = { enabled = false } },
+            })
+        end, { silent = true, desc = "[S]earch [F]iles" })
 
         vim.keymap.set("n", "<leader>gc", function()
             snacks.picker.files({ cmd = "git", args = { "--no-pager", "diff", "--name-only", "--diff-filter=U" } })
