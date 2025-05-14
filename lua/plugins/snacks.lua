@@ -33,7 +33,7 @@ return {
         end, { silent = true, desc = "Pick [G]it [C]onflicts" })
 
         vim.keymap.set("n", "<leader>/", snacks.picker.lines, { desc = "[/] fuzzy search current buffer]" })
-        vim.keymap.set("n", "<leader>PP", snacks.picker.pickers, { desc = "[P]ick [P]ickers" })
+        vim.keymap.set("n", "<leader>ck", snacks.picker.pickers, { desc = "Pick Pi[c][k]ers" })
         vim.keymap.set("n", "<leader>km", snacks.picker.keymaps, { desc = "[K]ey[M]aps" })
 
         -- terminal
