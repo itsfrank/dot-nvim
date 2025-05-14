@@ -85,6 +85,9 @@ return {
 
                     local utils = require("frank.utils.misc")
                     require("luau-lsp").setup({
+                        fflags = {
+                            enable_new_solver = true,
+                        },
                         sourcemap = {
                             enabled = true,
                             autogenerate = utils.is_project_json_present(vim.fn.getcwd()),

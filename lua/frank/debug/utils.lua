@@ -87,4 +87,20 @@ function dap_utils.telescope_debug_launch(find_files_opts, make_config, opts)
     require("telescope.builtin").find_files(find_files_opts)
 end
 
+-- start trying to migrate to snacks.picker
+--- @param on_pick fun(path:string)
+local function pick_exe(on_pick)
+    local snacks = require("snacks")
+    snacks.picker.files({
+        cmd = "fd",
+        args = { "-HI", "-t", "x" },
+        layout = { preview = false },
+        confirm = function(picker, item)
+            picker:close()
+            assert(item.file ~= nil)
+            on_pick(item.file)
+        end,
+    })
+end
+
 return dap_utils
