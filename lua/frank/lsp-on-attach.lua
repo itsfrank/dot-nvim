@@ -2,6 +2,7 @@
 return function(client, bufnr)
     -- lets us more easily define mappings specific
     -- for LSP related items. It sets the mode, buffer and description for us each time.
+    print("ON ATTACH RUN")
     local keymap_set = function(mode, keys, func, desc)
         if desc then
             desc = "LSP: " .. desc
@@ -14,8 +15,7 @@ return function(client, bufnr)
         return ":IncRename " .. vim.fn.expand("<cword>")
     end, { expr = true })
 
-    keymap_set("n", "<leader>ca", require("fastaction").code_action, "[C]ode [A]ction")
-    keymap_set("v", "<leader>ca", require("fastaction").range_code_action, "[C]ode [A]ction")
+    keymap_set({ "n", "v" }, "<leader>ca", require("fastaction").code_action, "[C]ode [A]ction")
 
     keymap_set("n", "gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
     keymap_set("n", "gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
@@ -32,7 +32,6 @@ return function(client, bufnr)
     -- See `:help K` for why this keymap
     keymap_set("n", "K", vim.lsp.buf.hover, "Hover Documentation")
     keymap_set({ "i", "n" }, "<C-k>", vim.lsp.buf.signature_help, "Function signature Documentation")
-    keymap_set({ "i", "n" }, "<C-l>", vim.diagnostic.open_float, "[L]ine diagnostics in float")
 
     if client.name == "clangd" then
         -- hop between matching source and header files

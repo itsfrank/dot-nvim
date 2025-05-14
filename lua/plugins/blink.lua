@@ -1,7 +1,7 @@
 return {
     "saghen/blink.cmp",
     -- optional: provides snippets for the snippet source
-    dependencies = "rafamadriz/friendly-snippets",
+    dependencies = { "rafamadriz/friendly-snippets", "folke/lazydev.nvim" },
 
     -- use a release tag to download pre-built binaries
     version = "*",
@@ -42,13 +42,28 @@ return {
 
         completion = {
             list = { selection = { preselect = false, auto_insert = true } },
-            documentation = { auto_show = true, auto_show_delay_ms = 0, update_delay_ms = 0 },
+            documentation = { auto_show = true, auto_show_delay_ms = 0, update_delay_ms = 50 },
         },
 
         -- Default list of enabled providers defined so that you can extend it
         -- elsewhere in your config, without redefining it, due to `opts_extend`
         sources = {
-            default = { "lsp", "path", "snippets", "buffer" },
+            default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+            providers = {
+                lazydev = {
+                    name = "LazyDev",
+                    module = "lazydev.integrations.blink",
+                    -- make lazydev completions top priority (see `:h blink.cmp`)
+                    score_offset = 100,
+                },
+            },
+        },
+        cmdline = {
+            keymap = { preset = "inherit" },
+            completion = {
+                menu = { auto_show = true },
+                list = { selection = { preselect = false, auto_insert = true } },
+            },
         },
     },
     opts_extend = { "sources.default" },

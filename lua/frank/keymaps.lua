@@ -35,8 +35,7 @@ vim.keymap.set("t", "<C-space>", "<C-\\><C-n>")
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+vim.keymap.set({ "i", "n" }, "<C-l>", vim.diagnostic.open_float, { desc = "[L]ine diagnostics in float" })
 
 -- window stuff
 -- better window movement (set by vim-tmux-navigator now)

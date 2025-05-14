@@ -5,7 +5,6 @@ return {
     -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     dependencies = {
-        "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         "j-hui/fidget.nvim",
         "folke/lazydev.nvim",
@@ -22,15 +21,11 @@ return {
             },
         })
 
-        local lspconfig = require("lspconfig")
-
         -- defaults passed to lspconfig (can be overriden in the lsp_servers list below)
         local default_on_attach = require("frank.lsp-on-attach")
-        local default_capabilities =
-            require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 
         ---Used to intialize lsp servers, note that on_attach and capabilities are extracted and set to nil
-        ---@class ServerConfig : lspconfig.Config
+        ---@class ServerConfig : vim.lsp.Config
         ---@field use_mason? boolean dont install with mason if false, nil implies true
         ---@field enable? fun():boolean|boolean conditionally disable the lsp, runs once per session (wont disable if things change after start)
         ---@field capabilities? fun():any|any
@@ -45,7 +40,7 @@ return {
             -- configure your lsp settings here, the table is used to intialize below
             clangd = { filetypes = { "c", "cpp", "objc", "objcpp", "cuda" } },
             gopls = {},
-            tsserver = {},
+            ts_ls = {},
             bashls = {},
             zls = {},
             pylsp = {
@@ -236,18 +231,18 @@ return {
             ocamllsp = {
                 use_mason = false,
                 filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
-                capabilities = function()
-                    local c = default_capabilities
-                    c.textDocument.completion.completionItem.snippetSupport = true
-                    c.textDocument.completion.completionItem.resolveSupport = {
-                        properties = {
-                            "documentation",
-                            "detail",
-                            "additionalTextEdits",
-                        },
-                    }
-                    return c
-                end,
+                -- capabilities = function()
+                --     local c = default_capabilities
+                --     c.textDocument.completion.completionItem.snippetSupport = true
+                --     c.textDocument.completion.completionItem.resolveSupport = {
+                --         properties = {
+                --             "documentation",
+                --             "detail",
+                --             "additionalTextEdits",
+                --         },
+                --     }
+                --     return c
+                -- end,
             },
         }
 
@@ -261,24 +256,34 @@ return {
             end),
         })
 
+        vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(args)
+                local client = vim.lsp.get_client_by_id(args.data.client_id)
+                require("frank.lsp-on-attach")(client, args.buf)
+            end,
+        })
+
+        vim.lsp.enable("lua_ls")
+        vim.lsp.enable("clangd")
         -- setup the servers
-        for server_name, server_settings in pairs(lsp_servers) do
-            server_settings = utils.get_or_function(server_settings)
-
-            server_settings.enable = utils.get_or_function(server_settings.enable)
-            if server_settings.enable ~= false then
-                if server_settings.custom_setup == nil then
-                    -- default setup
-                    server_settings.capabilities =
-                        utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
-                    server_settings.on_attach = utils.not_nil_or(server_settings.on_attach, default_on_attach)
-
-                    lspconfig[server_name].setup(server_settings)
-                else
-                    -- custom setup
-                    server_settings.custom_setup()
-                end
-            end
-        end
+        -- for server_name, server_settings in pairs(lsp_servers) do
+        --     server_settings = utils.get_or_function(server_settings)
+        --
+        --     server_settings.enable = utils.get_or_function(server_settings.enable)
+        --     if server_settings.enable ~= false then
+        --         if server_settings.custom_setup == nil then
+        --             -- default setup
+        --             -- server_settings.capabilities =
+        --             --     utils.not_nil_or(utils.get_or_function(server_settings.capabilities), default_capabilities)
+        --             server_settings.on_attach = utils.not_nil_or(server_settings.on_attach, default_on_attach)
+        --
+        --             vim.lsp.enable({ server_name })
+        --             vim.lsp.config(server_name, server_settings)
+        --         else
+        --             -- custom setup
+        --             server_settings.custom_setup()
+        --         end
+        --     end
+        -- end
     end,
 }

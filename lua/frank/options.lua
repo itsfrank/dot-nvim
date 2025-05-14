@@ -53,6 +53,7 @@ vim.opt.wrap = false
 
 vim.opt.swapfile = false
 vim.opt.backup = false
+vim.opt.writeany = true
 
 if os_info:is_windows() then
     vim.opt.undodir = os.getenv("HOMEPATH") .. "/.vim/undodir"
