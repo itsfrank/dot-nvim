@@ -2,7 +2,6 @@
 return function(client, bufnr)
     -- lets us more easily define mappings specific
     -- for LSP related items. It sets the mode, buffer and description for us each time.
-    print("ON ATTACH RUN")
     local keymap_set = function(mode, keys, func, desc)
         if desc then
             desc = "LSP: " .. desc
