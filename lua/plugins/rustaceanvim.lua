@@ -5,7 +5,7 @@ return {
         local on_attach = require("frank.lsp-on-attach")
 
         local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+        capabilities = require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 
         -- this is rustaceanvim's equivalent of calling setup() :/
         vim.g.rustaceanvim = {

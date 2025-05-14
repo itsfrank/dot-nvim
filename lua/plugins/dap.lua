@@ -4,7 +4,6 @@ return {
         "nvim-telescope/telescope-dap.nvim",
         "theHamsta/nvim-dap-virtual-text",
         "rcarriga/nvim-dap-ui",
-        "rcarriga/cmp-dap",
         "nvim-neotest/nvim-nio",
     },
     config = function()

@@ -3,5 +3,6 @@ vim.filetype.add({
     extension = {
         luau = "luau",
         tmux = "tmux",
+        http = "http",
     },
 })

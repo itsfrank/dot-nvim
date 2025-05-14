@@ -27,7 +27,7 @@ return {
         -- defaults passed to lspconfig (can be overriden in the lsp_servers list below)
         local default_on_attach = require("frank.lsp-on-attach")
         local default_capabilities =
-            require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+            require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 
         ---Used to intialize lsp servers, note that on_attach and capabilities are extracted and set to nil
         ---@class ServerConfig : lspconfig.Config

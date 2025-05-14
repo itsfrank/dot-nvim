@@ -44,6 +44,18 @@ return {
                         },
                     },
                 },
+                adapters = {
+                    deepseek = function()
+                        return require("codecompanion.adapters").extend("ollama", {
+                            name = "deepseek",
+                            schema = {
+                                model = {
+                                    default = "deepseek-r1:14b",
+                                },
+                            },
+                        })
+                    end,
+                },
             })
 
             -- create a folder to store our chats
@@ -100,7 +112,7 @@ return {
                 save_path:write(table.concat(lines, "\n"), "w")
             end, { nargs = "*" })
 
-            vim.keymap.set("n", "<leader>gpt", function()
+            local function toggle_chat()
                 codecompanion.toggle()
 
                 vim.cmd("wincmd L")
@@ -111,10 +123,10 @@ return {
                 if string.find(buffer_name, "%[CodeCompanion%]") then
                     vim.cmd("set filetype=markdown")
                 end
-            end, {
-                silent = true,
-                desc = "Chat[GPT] window",
-            })
+            end
+
+            vim.keymap.set("n", "<leader>gpt", toggle_chat, { desc = "chat[GPT] window" })
+            vim.keymap.set("n", "<leader>ai", toggle_chat, { desc = "[AI] chat window" })
         end,
     },
 }
