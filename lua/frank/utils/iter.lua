@@ -44,15 +44,6 @@ function iter.filter(list, p)
     return filtered
 end
 
--- number[]
-local input = { 1, 2, 3, 4, 5 }
-
-local filtered = iter.filter(input, function(v)
-    return v % 2 == 0
-end)
-
-local f = filtered
-
 ---Map values in a list
 ---@generic T, U
 ---@param list T[]
@@ -100,5 +91,86 @@ function iter.chain(v)
     })
     return wrapped
 end
+
+-- table versions
+
+iter.tbl = {}
+
+--- Execute predicate on all elements
+---@generic K, V
+---@param t table<K, V>
+---@param p fun(k:K, v:V):nil
+function iter.tbl.for_each(t, p)
+    for k, v in pairs(t) do
+        p(k, v)
+    end
+end
+
+---Filter a table
+---@generic K, V
+---@param t table<K, V>
+---@param p fun(k:K, v:V):boolean
+---@return table<K, V>
+function iter.tbl.filter(t, p)
+    local filtered = {}
+    for k, v in pairs(t) do
+        if p(k, v) then
+            filtered[k] = v
+        end
+    end
+    return filtered
+end
+
+---Map values in a table
+---@generic K_in, V_in, K_out, V_out
+---@param t table<K_in, V_out>
+---@param p fun(k:K_in, v:V_out):K_out, V_out
+---@return table<K_out, V_out>
+function iter.tbl.map(t, p)
+    local mapped = {}
+    for k, v in pairs(t) do
+        local k_out, v_out = p(k, v)
+        mapped[k_out] = v_out
+    end
+    return mapped
+end
+
+---Map values in a table to a list
+---@generic K_in, V_in, V_out
+---@param t table<K_in, V_out>
+---@param p fun(k:K_in, v:V_out):V_out?
+---@return V_out[]
+function iter.tbl.map_list(t, p)
+    local mapped = {}
+    for k, v in pairs(t) do
+        local v_out = p(k, v)
+        if v_out ~= nil then
+            table.insert(mapped, v_out)
+        end
+    end
+    return mapped
+end
+
+---Table keys as list
+---@generic K, V
+---@param t table<K, V>
+---@return K[]
+function iter.tbl.keys(t)
+    return iter.tbl.map_list(t, function(k, _)
+        return k
+    end)
+end
+
+---Table values as list
+---@generic K, V
+---@param t table<K, V>
+---@return V[]
+function iter.tbl.values(t)
+    return iter.tbl.map_list(t, function(_, v)
+        return v
+    end)
+end
+
+-- fold
 
 return iter

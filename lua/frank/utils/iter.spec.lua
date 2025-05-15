@@ -4,6 +4,21 @@ local function check_eq(a, b, message)
     assert(a == b, vim.inspect(a) .. " ~= " .. vim.inspect(b) .. (message == nil and "" or message))
 end
 
+local function check_tbl_eq(a, b, message)
+    local equal = true
+    for k, v in pairs(a) do
+        if b[k] ~= v then
+            equal = false
+        end
+    end
+    for k, v in pairs(b) do
+        if a[k] ~= v then
+            equal = false
+        end
+    end
+    assert(equal, vim.inspect(a) .. " ~= " .. vim.inspect(b) .. (message == nil and "" or message))
+end
+
 local function test_zip()
     local input_a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
     local input_b = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
@@ -62,11 +77,43 @@ local function test_chain()
     check_eq(exp, got)
 end
 
+local function test_tbl_map()
+    local input = {
+        a = 1,
+        b = 2,
+        c = 3,
+    }
+    local exp = {
+        a = "1",
+        b = "2",
+        c = "3",
+    }
+    local got = iter.tbl.map(input, function(k, v)
+        return k, tostring(v)
+    end)
+    check_tbl_eq(exp, got)
+end
+
+local function test_tbl_map_list()
+    local input = {
+        a = 1,
+        b = 2,
+        c = 3,
+    }
+    local exp = { "a1", "b2", "c3" }
+    local got = iter.tbl.map_list(input, function(k, v)
+        return k .. tostring(v)
+    end)
+    check_tbl_eq(exp, got)
+end
+
 -- run tests
 test_zip()
 test_filter()
 test_fold()
 test_map()
 test_chain()
+test_tbl_map()
+test_tbl_map_list()
 
 print("passed")
