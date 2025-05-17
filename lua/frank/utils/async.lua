@@ -13,6 +13,14 @@ function async.wrap(f)
     end
 end
 
+--- wrap a function with a callback and execute immediately
+---@param f fun(..., callback):nil
+---@return fun(...):...
+function async.await(f, ...)
+    local wrapped = async.wrap(f)
+    return wrapped(...)
+end
+
 --- immediately execute function in separate coroutine
 --- sugar for coroutine.create + coroutine.resume
 ---@param f fun():nil
@@ -20,15 +28,5 @@ function async.block(f)
     local co = coroutine.create(f)
     coroutine.resume(co)
 end
-
-local function test_wrap()
-    async.block(function()
-        local wrapped = async.wrap(vim.ui.input)
-        local value = wrapped({ prompt = "hello" })
-        print(value)
-    end)
-end
-
-test_wrap()
 
 return async
