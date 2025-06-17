@@ -13,7 +13,9 @@ return {
         require("lualine").setup({
             options = {
                 icons_enabled = false,
-                theme = "rose-pine-alt",
+                -- theme = "rose-pine-alt",
+                -- theme = "rose-pine-dawn",
+                -- theme = "catppuccin-latte",
                 component_separators = "|",
                 section_separators = "",
             },

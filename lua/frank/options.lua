@@ -29,8 +29,10 @@ vim.o.termguicolors = true
 vim.opt.background = "dark"
 
 vim.cmd.colorscheme("rose-pine")
+-- vim.cmd.colorscheme("rose-pine-dawn")
 -- vim.cmd.colorscheme("cyberdream")
 -- vim.cmd.colorscheme("catppuccin")
+-- vim.cmd.colorscheme("catppuccin-latte")
 -- vim.cmd.colorscheme("oxocarbon")
 
 -- override cursor line nr so its the same color as other colors, otherwise with cursorline its distracting
