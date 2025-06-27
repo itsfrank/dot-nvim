@@ -22,6 +22,14 @@ return {
         })
 
         local lsp_configs = {
+            zls = {
+                settings = {
+                    zls = {
+                        enable_build_on_save = true,
+                        build_on_save_step = "check",
+                    },
+                },
+            },
             lua_ls = {},
             clangd = {},
             luau_lsp = {
