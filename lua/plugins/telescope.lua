@@ -8,7 +8,6 @@ return {
     config = function()
         local telescope = require("telescope")
         telescope.load_extension("dap")
-        telescope.load_extension("workspaces")
         telescope.load_extension("aerial")
 
         telescope.setup({

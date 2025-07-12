@@ -8,7 +8,6 @@ return {
         "williamboman/mason-lspconfig.nvim",
         "j-hui/fidget.nvim",
         "folke/lazydev.nvim",
-        "lopi-py/luau-lsp.nvim",
         "Bilal2453/luvit-meta", -- libuv typings
     },
     config = function()
@@ -22,6 +21,7 @@ return {
         })
 
         local lsp_configs = {
+            clangd = {},
             zls = {
                 settings = {
                     zls = {
@@ -31,9 +31,11 @@ return {
                 },
             },
             lua_ls = {},
-            clangd = {},
             luau_lsp = {
                 exclude_enable = true,
+                custom_setup = function()
+                    -- moved to luau.lua
+                end,
             },
         }
 
@@ -53,6 +55,11 @@ return {
             },
         })
 
+        for _, config in pairs(lsp_configs) do
+            if config.custom_setup then
+                config.custom_setup()
+            end
+        end
         -- need to do this for now, see: https://github.com/neovim/nvim-lspconfig/issues/3827
         vim.api.nvim_create_autocmd("LspAttach", {
             callback = function(args)

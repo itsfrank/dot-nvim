@@ -2,7 +2,7 @@ local plenary = require("plenary")
 local m = {}
 
 function m.is_rbx_lua_project(path)
-    local found_rbxp = plenary.scandir.scan_dir(path, { depth = 1, search_pattern = ".*%.rbxp", hidden = true })
+    local found_rbxp = plenary.scandir.scan_dir(path, { depth = 1, search_pattern = ".*.rbxp", hidden = true })
     return #found_rbxp > 0 or m.is_rbx_game_engine(path)
 end
 

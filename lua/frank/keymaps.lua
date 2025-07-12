@@ -29,9 +29,6 @@ vim.keymap.set({ "n", "v" }, "<leader>P", '"+P', { desc = "Paste from system cli
 vim.keymap.set("n", "<leader>Y", '"+yg_', { desc = "Yank to system cpliboard" })
 vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank to system cpliboar" })
 
--- convenience, use c-space to leave terminal mode
-vim.keymap.set("t", "<C-space>", "<C-\\><C-n>")
-
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
