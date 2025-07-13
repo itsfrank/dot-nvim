@@ -2,7 +2,6 @@ return {
     {
         "rose-pine/neovim",
         name = "rose-pine",
-        branch = "canary", -- TODO: when v2.0.0 ships remove this
         priority = 1000,
         config = function()
             ---@diagnostic disable:missing-fields
