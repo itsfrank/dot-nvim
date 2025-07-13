@@ -16,4 +16,8 @@ function module:is_linux()
     return self.sysname == "Linux"
 end
 
+function module.is_work_laptop()
+    return vim.fn.environ()["IS_WORK_LAPTOP"] == "true"
+end
+
 return module
