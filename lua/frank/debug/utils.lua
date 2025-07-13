@@ -23,6 +23,9 @@ function dap_utils.debug_last()
     dap.run(dap_utils._last_exec)
 end
 
+-- TODO: rewrite this whole thing
+-- TODO: remove telescope
+
 ---@class TelescopeDebugLaunchOptions
 ---@field prompt_args? boolean #prompt user for args afte selecting executable, input will be split on spaces
 ---@field args? string[] #args passed to exe

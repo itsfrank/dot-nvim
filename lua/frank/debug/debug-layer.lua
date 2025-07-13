@@ -16,7 +16,11 @@ local function set_keybinds()
         fire_layer_change()
     end, { desc = "Exit the debug keymap layer" })
 
-    m.layer:map("n", "<leader>de", ":LaunchDebugCppExe<cr>", { desc = "Debug Executeable - select exe with telescope" })
+    -- TODO: re-enable when debug utils rework is done
+    m.layer:map("n", "<leader>de", function()
+        error("not implemented")
+    end, { desc = "Debug Executeable - fuzzy selext exe" })
+
     m.layer:map("n", "<leader>dl", ":LaunchDebugLast<cr>", { desc = "Debug Last - re-run last debug session" })
 
     local dap = require("dap")

@@ -22,13 +22,6 @@ return {
             harpoon.ui:toggle_quick_menu(harpoon:list())
         end, { desc = "[H]arpoon [V]iew quick menu" })
 
-        vim.keymap.set(
-            "n",
-            "<leader>hs",
-            ":Telescope harpoon marks<cr>",
-            { silent = true, desc = "[H]arpoon [S]earch with telescope" }
-        )
-
         -- set up numeric keymaps: <leader>h1-9 for jumping to marks
         for i = 1, 9 do
             vim.keymap.set("n", "<leader>h" .. tostring(i), function()

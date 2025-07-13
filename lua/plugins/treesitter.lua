@@ -9,6 +9,7 @@ return {
         "nvim-treesitter/nvim-treesitter-context",
     },
     config = function()
+        ---@diagnostic disable-next-line: missing-fields
         require("nvim-treesitter.configs").setup({
             -- Add languages to be installed here that you want installed for treesitter
             ensure_installed = {
@@ -35,8 +36,8 @@ return {
                 keymaps = {
                     init_selection = "<c-c>",
                     node_incremental = "<c-c>",
-                    scope_incremental = "<c-f>",
                     node_decremental = "<c-r>",
+                    scope_incremental = "<c-f>",
                 },
             },
             textobjects = {

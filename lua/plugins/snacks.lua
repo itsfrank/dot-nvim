@@ -25,6 +25,11 @@ return {
             terminal = {},
         })
 
+        -- add my custom pickers
+        local frk_picker = require("frank.utils.picker")
+        ---@diagnostic disable-next-line: inject-field
+        Snacks.picker.directories = frk_picker.fuzzy_oil
+
         -- picker
         vim.keymap.set("n", "<leader>sf", function()
             snacks.picker.files({
@@ -32,13 +37,20 @@ return {
             })
         end, { silent = true, desc = "[S]earch [F]iles" })
 
+        vim.keymap.set("n", "<leader>fs", Snacks.picker.directories, { silent = true, desc = "[F]older [S]earch" })
+
         vim.keymap.set("n", "<leader>gc", function()
             snacks.picker.files({ cmd = "git", args = { "--no-pager", "diff", "--name-only", "--diff-filter=U" } })
-        end, { silent = true, desc = "Pick [G]it [C]onflicts" })
+        end, { desc = "Pick [G]it [C]onflicts" })
 
         vim.keymap.set("n", "<leader>/", snacks.picker.lines, { desc = "[/] fuzzy search current buffer]" })
         vim.keymap.set("n", "<leader>ck", snacks.picker.pickers, { desc = "Pick Pi[c][k]ers" })
         vim.keymap.set("n", "<leader>km", snacks.picker.keymaps, { desc = "[K]ey[M]aps" })
+        vim.keymap.set("n", "<leader>sh", snacks.picker.help, { desc = "[S]earch [H]elp" })
+        vim.keymap.set("n", "<leader>sd", snacks.picker.diagnostics_buffer, { desc = "[S]earch [D]iagnostics" })
+        vim.keymap.set("n", "<leader><space>", snacks.picker.buffers, { desc = "[ ] Find existing buffers" })
+        vim.keymap.set("n", "<leader>gs", snacks.picker.git_status, { desc = "search [G]it [S]tatus" })
+        vim.keymap.set("n", "<leader>sg", snacks.picker.grep, { desc = "[S]earch by [G]rep" })
 
         -- terminal
         vim.keymap.set({ "n", "t" }, "<m-q>", function()

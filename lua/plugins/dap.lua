@@ -1,7 +1,6 @@
 return {
     "mfussenegger/nvim-dap",
     dependencies = {
-        "nvim-telescope/telescope-dap.nvim",
         "theHamsta/nvim-dap-virtual-text",
         "rcarriga/nvim-dap-ui",
         "nvim-neotest/nvim-nio",
@@ -22,17 +21,18 @@ return {
         local dap_cpp = require("frank.debug.dap-cpp")
         dap.adapters.lldb = dap_cpp.lldb_adapter
 
-        vim.api.nvim_create_user_command("LaunchDebugCppExe", function()
-            dap_utils.telescope_debug_launch({}, function(selected, args)
-                return dap_cpp.new_cpp_debug_config(selected, args)
-            end)
-        end, { desc = "Select a cpp exe with telescope and launch it with a debugger addached" })
-
-        vim.api.nvim_create_user_command("LaunchDebugCppExeArgs", function(opts)
-            dap_utils.telescope_debug_launch({}, function(selected, args)
-                return dap_cpp.new_cpp_debug_config(selected, args)
-            end, { args = opts.args })
-        end, { nargs = "?", desc = "Select a cpp exe with telescope and launch it with a debugger addached" })
+        -- TODO: re-enable when debug utils rework is done
+        -- vim.api.nvim_create_user_command("LaunchDebugCppExe", function()
+        --     dap_utils.telescope_debug_launch({}, function(selected, args)
+        --         return dap_cpp.new_cpp_debug_config(selected, args)
+        --     end)
+        -- end, { desc = "Select a cpp exe with telescope and launch it with a debugger addached" })
+        --
+        -- vim.api.nvim_create_user_command("LaunchDebugCppExeArgs", function(opts)
+        --     dap_utils.telescope_debug_launch({}, function(selected, args)
+        --         return dap_cpp.new_cpp_debug_config(selected, args)
+        --     end, { args = opts.args })
+        -- end, { nargs = "?", desc = "Select a cpp exe with telescope and launch it with a debugger addached" })
 
         -- lua stuff
         local dap_lua = require("frank.debug.dap-lua")

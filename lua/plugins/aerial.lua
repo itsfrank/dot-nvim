@@ -11,11 +11,10 @@ return { -- code outline and navigation
                     { silent = true, desc = "Toggle [A]e[R]ial - file symbol tree" }
                 )
 
-                -- search with telescope
                 vim.keymap.set(
                     "n",
                     "<leader>sa",
-                    require("telescope").extensions.aerial.aerial,
+                    require("aerial").snacks_picker,
                     { desc = "Search [S]earch [A]erial" }
                 )
 

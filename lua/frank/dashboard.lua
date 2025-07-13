@@ -85,8 +85,6 @@ local quick_link_btns = {
         { type = "text", val = "QUICK LINKS", opts = { hl = hl_blue, position = "center" } },
         { type = "padding", val = 1 },
         button("SPC n f", "  New File", ":ene <BAR> startinsert<CR>"),
-        button("SPC f b", "  File Browser", ":Telescope file_browser<CR>"),
-        button("SPC w k", "  Workspaces", ":Telescope workspaces<CR>"),
     },
     opts = {
         hl = hl_green,
@@ -107,7 +105,6 @@ local config_btns = {
     val = {
         { type = "text", val = "CONFIGS", opts = { hl = hl_blue, position = "center" } },
         { type = "padding", val = 1 },
-        button("SPC c", "  Config Files", ":cd ~/.config<CR> :Telescope file_browser<CR>"),
         button("SPC c 1", "    Neovim", ":cd " .. config_paths.neovim .. "<CR> :e init.lua<CR>"),
         button("SPC c 2", "    Wezterm", ":cd " .. config_paths.wezterm .. "<CR> :e wezterm.lua<CR>"),
     },
