@@ -1,109 +1,62 @@
+local dap = require("dap")
+
 local dap_utils = {}
 
---- warning, this does not respect quoted args, but I haven't run into that problem yet so...
-local function str_split(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t = {}
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        table.insert(t, str)
-    end
-    return t
-end
+---@class LaunchDebugConfig
+---@field kind string
+---@field exe string
+---@field args string[]
 
+---@type LaunchDebugConfig|nil
 dap_utils._last_exec = nil
+dap_utils._debug_kind_launchers = {}
 
 function dap_utils.debug_last()
     if dap_utils._last_exec == nil then
-        error("last exec is nil, you must debug something once before usinf debug_last")
+        error("last exec is nil, you must debug something once before using debug_last")
         return
     end
-    local dap = require("dap")
-    dap.run(dap_utils._last_exec)
+    dap_utils.launch_debug(dap_utils._last_exec)
 end
 
--- TODO: rewrite this whole thing
--- TODO: remove telescope
-
----@class TelescopeDebugLaunchOptions
----@field prompt_args? boolean #prompt user for args afte selecting executable, input will be split on spaces
----@field args? string[] #args passed to exe
-
----Select executable in a directory with telescope
----selected executable will be launched with debugger configuration
----@see TelescopeDebugLaunchOptions
----@param find_files_opts any #options to telescop find_files command
----@param make_config fun(selected:string, args:string[]|nil):any #function to make dap debug config
----@param opts? TelescopeDebugLaunchOptions #options
-function dap_utils.telescope_debug_launch(find_files_opts, make_config, opts)
-    local dap = require("dap")
-
-    local exec_dap = function(selected_exe, args)
-        local config = make_config(selected_exe, args)
-        dap_utils._last_exec = config
-        dap.run(config)
+---@param conf LaunchDebugConfig
+function dap_utils.launch_debug(conf)
+    local make_config = dap_utils._debug_kind_launchers[conf.kind]
+    if make_config == nil then
+        error("no debug launcher registered for kind: " .. conf.kind)
+        return
     end
 
-    ---@param callback fun(args:string[]|nil):nil
-    local get_args_exec = function(callback)
-        vim.ui.input({
-            prompt = "Executable args",
-        }, function(input)
-            if input == nil then
-                -- cancelled with esc, dont call callback
-                return
-            end
+    dap_utils._last_exec = conf
+    local dap_config = make_config(conf.exe, conf.args)
+    dap.run(dap_config)
+end
 
-            if input == "" then
-                callback()
-            else
-                local args = str_split(input)
-                callback(args)
-            end
-        end)
-    end
+---@param fn fun(selected_exe:string, args:string[]|nil):dap.Configuration
+function dap_utils.register_debug_kind(name, fn)
+    dap_utils._debug_kind_launchers[name] = fn
+end
 
-    local telescope_callback = function(prompt_bufnr)
-        local actions_state = require("telescope.actions.state")
-        local actions = require("telescope.actions")
-        local selected_entry = actions_state.get_selected_entry()
-        local selected_exe = selected_entry.cwd .. "/" .. selected_entry[1]
-        if opts ~= nil and opts.prompt_args == true then
-            get_args_exec(function(args)
-                exec_dap(selected_exe, args)
-            end)
-        elseif opts ~= nil and opts.args ~= nil then
-            exec_dap(selected_exe, opts.args)
-        else
-            exec_dap(selected_exe)
+-- user command: LaunchDebug <kind> <exe path> [<args to fwd to exe...>]
+function dap_utils.make_commands()
+    vim.api.nvim_create_user_command("LaunchDebug", function(opts)
+        local conf = {
+            kind = opts.fargs[1],
+            exe = opts.fargs[2],
+            args = {},
+        }
+        for i = 3, #opts.fargs do
+            table.insert(conf.args, opts.fargs[i])
         end
-        actions.close(prompt_bufnr)
-    end
+        dap_utils.launch_debug(conf)
+    end, { nargs = "*" })
 
-    find_files_opts.find_command = { "fd", "-HI", "-t", "x" } -- find executables including in hidden folders (e.g. ./build)
-    find_files_opts.attach_mappings = function(_, map)
-        map("n", "<cr>", telescope_callback)
-        map("i", "<cr>", telescope_callback)
-        return true
-    end
-    require("telescope.builtin").find_files(find_files_opts)
+    vim.api.nvim_create_user_command("LaunchDebugLast", function(_)
+        dap_utils.debug_last()
+    end, {})
 end
 
--- start trying to migrate to snacks.picker
---- @param on_pick fun(path:string)
-local function pick_exe(on_pick)
-    local snacks = require("snacks")
-    snacks.picker.files({
-        cmd = "fd",
-        args = { "-HI", "-t", "x" },
-        layout = { preview = false },
-        confirm = function(picker, item)
-            picker:close()
-            assert(item.file ~= nil)
-            on_pick(item.file)
-        end,
-    })
-end
+-- TODO: maybe add a fuzzy picker for finding debug exes?
+-- TODO: maybe add launch config history? With fuzzy picker and persistence?
 
 return dap_utils
