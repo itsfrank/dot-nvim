@@ -1,11 +1,10 @@
 return {
     {
         "lopi-py/luau-lsp.nvim",
-        enabled = function()
-            -- on work laptop, setup with rbx-luau.nvim
-            return not require("frank.utils.os-info").is_work_laptop()
-        end,
         config = function()
+            if not require("frank.utils.os-info").is_work_laptop() then
+                return -- we configure below in that case
+            end
             --- @diagnostic disable-next-line: missing-fields
             require("luau-lsp").setup({
                 -- todo: figure out what options I like
