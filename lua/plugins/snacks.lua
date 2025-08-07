@@ -40,7 +40,9 @@ return {
         vim.keymap.set("n", "<leader>fs", Snacks.picker.directories, { silent = true, desc = "[F]older [S]earch" })
 
         vim.keymap.set("n", "<leader>gc", function()
-            snacks.picker.files({ cmd = "git", args = { "--no-pager", "diff", "--name-only", "--diff-filter=U" } })
+            snacks.picker.git_status({
+                pattern = "UU",
+            })
         end, { desc = "Pick [G]it [C]onflicts" })
 
         vim.keymap.set("n", "<leader>/", snacks.picker.lines, { desc = "[/] fuzzy search current buffer]" })
@@ -51,6 +53,12 @@ return {
         vim.keymap.set("n", "<leader><space>", snacks.picker.buffers, { desc = "[ ] Find existing buffers" })
         vim.keymap.set("n", "<leader>gs", snacks.picker.git_status, { desc = "search [G]it [S]tatus" })
         vim.keymap.set("n", "<leader>sg", snacks.picker.grep, { desc = "[S]earch by [G]rep" })
+        vim.keymap.set(
+            "n",
+            "<leader>cr",
+            snacks.picker.command_history,
+            { desc = "[c]ommand histo[r]y (also ctrl-r?)" }
+        )
 
         -- terminal
         vim.keymap.set({ "n", "t" }, "<m-q>", function()

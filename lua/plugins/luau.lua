@@ -26,6 +26,7 @@ return {
             local rbx_luau = require("rbx-luau")
             rbx_luau.setup({
                 autostart_sourcemap_watcher = true, -- automatically start watching lua[u] file in rbxp projects
+                notify = false,
             })
 
             -- we use .lua for luau files, in rbxp projects, consider .lua as luau files
