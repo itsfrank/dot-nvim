@@ -56,6 +56,11 @@ return {
                     -- make lazydev completions top priority (see `:h blink.cmp`)
                     score_offset = 100,
                 },
+                buffer = {
+                    opts = {
+                        enable_in_ex_commands = true,
+                    },
+                },
             },
         },
         cmdline = {
