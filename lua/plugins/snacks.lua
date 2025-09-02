@@ -39,11 +39,17 @@ return {
 
         vim.keymap.set("n", "<leader>fs", Snacks.picker.directories, { silent = true, desc = "[F]older [S]earch" })
 
+        local confilct_codes = { ["UU"] = 1, ["AA"] = 1, ["DD"] = 1, ["AU"] = 1, ["UA"] = 1, ["UD"] = 1, ["DU"] = 1 }
         vim.keymap.set("n", "<leader>gc", function()
-            snacks.picker.git_status({
-                pattern = "UU",
+            snacks.picker.pick({
+                finder = "git_status",
+                format = "git_status",
+                preview = "git_status",
+                transform = function(item)
+                    return confilct_codes[item.status] == 1
+                end,
             })
-        end, { desc = "Pick [G]it [C]onflicts" })
+        end, { desc = "pick [g]it [c]onflicts" })
 
         vim.keymap.set("n", "<leader>/", snacks.picker.lines, { desc = "[/] fuzzy search current buffer]" })
         vim.keymap.set("n", "<leader>ck", snacks.picker.pickers, { desc = "Pick Pi[c][k]ers" })
