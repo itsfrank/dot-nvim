@@ -1,3 +1,10 @@
+local function best_sourcemap_rbxp()
+    -- check if "analyze.rbxp" exists in the current directory
+    if vim.fn.filereadable("analyze.rbxp") == 1 then
+        return "analyze.rbxp"
+    end
+    return "default.rbxp"
+end
 return {
     {
         "lopi-py/luau-lsp.nvim",
@@ -25,9 +32,16 @@ return {
             -- where you set up your plugin, likel in the lazy.nvim plugin object `config` function
             local rbx_luau = require("rbx-luau")
             rbx_luau.setup({
-                autostart_sourcemap_watcher = true, -- automatically start watching lua[u] file in rbxp projects
+                autostart_sourcemap_watcher = false, -- automatically start watching lua[u] file in rbxp projects
                 notify = false,
+                -- command = { "rplug", "-p", "sourcemap", "--rbxp", picked_rbxp },
+                forward_command_output_to_file = false,
             })
+
+            -- utility to find foundation tags
+            vim.keymap.set("n", "<leader>FF", function()
+                require("rbx-luau").pick_foundation_tag()
+            end, { desc = "pick foundation tag" })
 
             -- we use .lua for luau files, in rbxp projects, consider .lua as luau files
             if rbx_luau.is_rbxp_project(vim.fn.getcwd()) then
@@ -40,6 +54,17 @@ return {
                 })
             end
 
+            vim.lsp.config("luau-lsp", {
+                settings = {
+                    ["luau-lsp"] = {
+                        index = {
+                            maxFiles = 100000,
+                        },
+                    },
+                },
+            })
+
+            local picked_rbxp = best_sourcemap_rbxp()
             require("luau-lsp").setup({
                 platform = {
                     type = "roblox",
@@ -50,7 +75,8 @@ return {
                 },
                 sourcemap = {
                     enabled = true, -- disable rojo-based sourcemap gen to silence errors
-                    autogenerate = false, -- automatically generate sourcemaps for luau files
+                    autogenerate = true, -- automatically generate sourcemaps for luau files
+                    generator_cmd = { "rplug", "-p", "sourcemap", "--rbxp", picked_rbxp, "-w" },
                 },
             })
         end,

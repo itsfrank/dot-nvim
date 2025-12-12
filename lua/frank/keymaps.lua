@@ -34,6 +34,10 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set({ "i", "n" }, "<C-l>", vim.diagnostic.open_float, { desc = "[L]ine diagnostics in float" })
 
+-- quickfix utils
+vim.keymap.set("n", "<leader>qn", ":cn<cr>", { desc = "[q]uickfix [n]ext", silent = true })
+vim.keymap.set("n", "<leader>qp", ":cp<cr>", { desc = "[q]uickfix [p]rev", silent = true })
+
 -- window stuff
 -- better window movement (set by vim-tmux-navigator now)
 -- vim.keymap.set("n", "<M-h>", "<C-w>h", { desc = "Window left" })
