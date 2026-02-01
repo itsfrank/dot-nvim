@@ -21,6 +21,14 @@ vim.keymap.set(
     ":FormatModifications<cr>",
     { silent = true, desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
 )
+vim.keymap.set("n", "<M-f>", function()
+    local ft = vim.bo.filetype
+    if ft == "cpp" then
+        vim.cmd("FormatModifications")
+    else
+        vim.cmd("Format")
+    end
+end, { silent = true, desc = "Format current buffer" })
 
 -- system clipboard keymaps
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system cpliboard" })
@@ -33,6 +41,10 @@ vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank to system cpliboar" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set({ "i", "n" }, "<C-l>", vim.diagnostic.open_float, { desc = "[L]ine diagnostics in float" })
+
+-- quickfix utils
+vim.keymap.set("n", "<leader>qn", ":cn<cr>", { desc = "[q]uickfix [n]ext", silent = true })
+vim.keymap.set("n", "<leader>qp", ":cp<cr>", { desc = "[q]uickfix [p]rev", silent = true })
 
 -- window stuff
 -- better window movement (set by vim-tmux-navigator now)

@@ -38,6 +38,9 @@ return {
                 end,
             },
             elixirls = {},
+            rust_analyzer = {
+                exclude_enable = true,
+            },
         }
 
         -- compute the things

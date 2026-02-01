@@ -39,9 +39,17 @@ return {
 
         vim.keymap.set("n", "<leader>fs", Snacks.picker.directories, { silent = true, desc = "[F]older [S]earch" })
 
+        local confilct_codes = { ["UU"] = 1, ["AA"] = 1, ["DD"] = 1, ["AU"] = 1, ["UA"] = 1, ["UD"] = 1, ["DU"] = 1 }
         vim.keymap.set("n", "<leader>gc", function()
-            snacks.picker.files({ cmd = "git", args = { "--no-pager", "diff", "--name-only", "--diff-filter=U" } })
-        end, { desc = "Pick [G]it [C]onflicts" })
+            snacks.picker.pick({
+                finder = "git_status",
+                format = "git_status",
+                preview = "git_status",
+                transform = function(item)
+                    return confilct_codes[item.status] == 1
+                end,
+            })
+        end, { desc = "pick [g]it [c]onflicts" })
 
         vim.keymap.set("n", "<leader>/", snacks.picker.lines, { desc = "[/] fuzzy search current buffer]" })
         vim.keymap.set("n", "<leader>ck", snacks.picker.pickers, { desc = "Pick Pi[c][k]ers" })
@@ -51,6 +59,12 @@ return {
         vim.keymap.set("n", "<leader><space>", snacks.picker.buffers, { desc = "[ ] Find existing buffers" })
         vim.keymap.set("n", "<leader>gs", snacks.picker.git_status, { desc = "search [G]it [S]tatus" })
         vim.keymap.set("n", "<leader>sg", snacks.picker.grep, { desc = "[S]earch by [G]rep" })
+        vim.keymap.set(
+            "n",
+            "<leader>cr",
+            snacks.picker.command_history,
+            { desc = "[c]ommand histo[r]y (also ctrl-r?)" }
+        )
 
         -- terminal
         vim.keymap.set({ "n", "t" }, "<m-q>", function()
@@ -72,5 +86,31 @@ return {
                 snacks.terminal.toggle(nil, { win = { height = 0 } })
             end
         end)
+
+        vim.keymap.set("i", "<C-f>", function()
+            local win = vim.api.nvim_get_current_win()
+            local buf = vim.api.nvim_win_get_buf(win)
+            local row, col = unpack(vim.api.nvim_win_get_cursor(win))
+
+            snacks.picker.files({
+                hidden = true,
+                layout = { preview = { enabled = false } },
+                confirm = function(picker, item)
+                    if not item then
+                        picker:close()
+                        return
+                    end
+                    local path = item.path or item.text or ""
+
+                    picker:close()
+                    vim.schedule(function()
+                        vim.api.nvim_set_current_win(win)
+                        vim.api.nvim_buf_set_text(buf, row - 1, col, row - 1, col, { path })
+                        vim.api.nvim_win_set_cursor(win, { row, col + #path })
+                        vim.cmd("startinsert!")
+                    end)
+                end,
+            })
+        end, { desc = "insert [f]ilepath in insert mode" })
     end,
 }
