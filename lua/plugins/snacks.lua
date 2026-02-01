@@ -86,5 +86,31 @@ return {
                 snacks.terminal.toggle(nil, { win = { height = 0 } })
             end
         end)
+
+        vim.keymap.set("i", "<C-f>", function()
+            local win = vim.api.nvim_get_current_win()
+            local buf = vim.api.nvim_win_get_buf(win)
+            local row, col = unpack(vim.api.nvim_win_get_cursor(win))
+
+            snacks.picker.files({
+                hidden = true,
+                layout = { preview = { enabled = false } },
+                confirm = function(picker, item)
+                    if not item then
+                        picker:close()
+                        return
+                    end
+                    local path = item.path or item.text or ""
+
+                    picker:close()
+                    vim.schedule(function()
+                        vim.api.nvim_set_current_win(win)
+                        vim.api.nvim_buf_set_text(buf, row - 1, col, row - 1, col, { path })
+                        vim.api.nvim_win_set_cursor(win, { row, col + #path })
+                        vim.cmd("startinsert!")
+                    end)
+                end,
+            })
+        end, { desc = "insert [f]ilepath in insert mode" })
     end,
 }

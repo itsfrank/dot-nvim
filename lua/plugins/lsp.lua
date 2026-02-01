@@ -37,6 +37,9 @@ return {
                     -- moved to luau.lua
                 end,
             },
+            rust_analyzer = {
+                exclude_enable = true,
+            },
         }
 
         -- compute the things

@@ -21,6 +21,14 @@ vim.keymap.set(
     ":FormatModifications<cr>",
     { silent = true, desc = "[F]orma[T] [M]odifications - formats modifications in this buffer" }
 )
+vim.keymap.set("n", "<M-f>", function()
+    local ft = vim.bo.filetype
+    if ft == "cpp" then
+        vim.cmd("FormatModifications")
+    else
+        vim.cmd("Format")
+    end
+end, { silent = true, desc = "Format current buffer" })
 
 -- system clipboard keymaps
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system cpliboard" })
