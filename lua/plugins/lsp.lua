@@ -37,6 +37,7 @@ return {
                     -- moved to luau.lua
                 end,
             },
+            elixirls = {},
         }
 
         -- compute the things

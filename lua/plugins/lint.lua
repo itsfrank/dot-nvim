@@ -5,6 +5,7 @@ return {
             shell = { "bash" },
             sh = { "bash" },
             bash = { "bash" },
+            javascript = { "biomejs" },
             -- lua = { "selene" },
         }
         vim.api.nvim_create_autocmd({ "BufWritePost" }, {

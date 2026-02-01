@@ -28,6 +28,7 @@ return {
                 "typescript",
                 "vim",
                 "vimdoc",
+                "elixir",
             },
             highlight = { enable = true },
             indent = { enable = true, disable = { "python" } },

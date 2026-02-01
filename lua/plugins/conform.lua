@@ -9,7 +9,7 @@ return {
     config = function()
         -- inverse of conform's formatters_by_ft
         local formatters = {
-            prettier = { ft = { "javascript" } },
+            biome = { ft = { "javascript" } },
             fixjson = { ft = { "json" } },
             stylua = { ft = { "lua", "luau" } },
             markdownlint = { ft = { "markdown" } },
@@ -19,6 +19,8 @@ return {
             yamlfmt = { ft = { "yaml" } },
             ocamlformat = { ft = { "ocaml" }, auto_install = false },
             nixfmt = { ft = { "nix" }, auto_install = false },
+            mix = { ft = { "elixir" }, auto_install = false },
+            hcl = { ft = { "hcl" }, auto_install = false },
         }
 
         local formatters_by_ft = {}
