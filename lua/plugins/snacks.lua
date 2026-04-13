@@ -21,6 +21,13 @@ return {
                         },
                     },
                 },
+                formatters = {
+                    file = {
+                        filename_first = true,
+                        truncate = "left",
+                        min_width = 80, -- minimum length of the truncated path
+                    },
+                },
             },
             terminal = {},
         })
