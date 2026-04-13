@@ -9,12 +9,11 @@ return {
     config = function()
         -- inverse of conform's formatters_by_ft
         local formatters = {
-            biome = { ft = { "javascript" } },
             fixjson = { ft = { "json" } },
             stylua = { ft = { "lua", "luau" } },
             markdownlint = { ft = { "markdown" } },
             black = { ft = { "python" } },
-            rustfmt = { ft = { "rust" } },
+            rustfmt = { ft = { "rust" }, auto_install = false },
             shfmt = { ft = { "sh" } },
             yamlfmt = { ft = { "yaml" } },
             ocamlformat = { ft = { "ocaml" }, auto_install = false },
@@ -23,7 +22,9 @@ return {
             hcl = { ft = { "hcl" }, auto_install = false },
         }
 
-        local formatters_by_ft = {}
+        local formatters_by_ft = {
+            javascript = { "biome-check" },
+        }
         local formatters_to_install = {}
         for fm, v in pairs(formatters) do
             if v.auto_install ~= false then
