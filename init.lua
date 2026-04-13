@@ -32,3 +32,4 @@ require("frank.options")
 require("frank.keymaps")
 require("frank.commands")
 require("frank.filetype")
+require("frank.ui2") -- remove/update when ui2 is stabilized
