@@ -15,6 +15,7 @@ return {
 
         vim.lsp.config("*", {
             capabilities = require("blink.cmp").get_lsp_capabilities(),
+            on_attach = require("frank.lsp-on-attach"),
         })
 
         vim.lsp.enable("lua_ls")

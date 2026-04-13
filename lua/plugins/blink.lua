@@ -19,16 +19,12 @@ return {
         -- See the full "keymap" documentation for information on defining your own keymap.
         keymap = {
             preset = "enter",
-            ["<Up>"] = { "fallback" },
-            ["<Down>"] = { "fallback" },
             ["<tab>"] = { "select_next", "fallback" },
             ["<s-tab>"] = { "select_prev", "fallback" },
-            ["<c-s>"] = {
-                function(cmp)
-                    cmp.show()
-                end,
-            },
+            ["<c-s>"] = { "show", "show_documentation", "hide_documentation" },
+            ["<c-k>"] = { "show_signature", "hide_signature", "fallback" },
         },
+        signature = { enabled = true },
 
         appearance = {
             -- Sets the fallback highlight groups to nvim-cmp's highlight groups
@@ -68,7 +64,13 @@ return {
             },
         },
         cmdline = {
-            keymap = { preset = "inherit" },
+            keymap = {
+                ["<CR>"] = { "fallback" },
+                ["<Up>"] = { "fallback" },
+                ["<Down>"] = { "fallback" },
+                ["<tab>"] = { "select_next", "fallback" },
+                ["<s-tab>"] = { "select_prev", "fallback" },
+            },
             completion = {
                 menu = { auto_show = true },
                 list = { selection = { preselect = false, auto_insert = true } },
