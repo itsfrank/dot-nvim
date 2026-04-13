@@ -73,7 +73,7 @@ vim.opt.isfname:append("@-@")
 vim.diagnostic.config({ virtual_text = true })
 
 -- dont log lsp stuff (set to "debug" when you want them)
-vim.lsp.set_log_level("WARN")
+vim.lsp.log.set_level("WARN")
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"

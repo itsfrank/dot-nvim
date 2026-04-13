@@ -1,52 +1,34 @@
 return {
     "stevearc/conform.nvim",
     dependencies = {
-        "lewis6991/gitsigns.nvim", -- for format modifications
         "williamboman/mason.nvim",
         "LittleEndianRoot/mason-conform",
         "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     config = function()
         -- inverse of conform's formatters_by_ft
-        local formatters = {
-            fixjson = { ft = { "json" } },
-            stylua = { ft = { "lua", "luau" } },
-            markdownlint = { ft = { "markdown" } },
-            black = { ft = { "python" } },
-            rustfmt = { ft = { "rust" }, auto_install = false },
-            shfmt = { ft = { "sh" } },
-            yamlfmt = { ft = { "yaml" } },
-            ocamlformat = { ft = { "ocaml" }, auto_install = false },
-            nixfmt = { ft = { "nix" }, auto_install = false },
-            mix = { ft = { "elixir" }, auto_install = false },
-            hcl = { ft = { "hcl" }, auto_install = false },
-        }
-
         local formatters_by_ft = {
+            lua = { "stylua" },
+            luau = { "stylua" },
+            json = { "fixjson" },
+            markdown = { "markdownlint" },
+            python = { "black" },
+            rust = { "rustfmt" },
+            sh = { "shfmt" },
+            yaml = { "yamlfmt" },
+            ocaml = { "ocamlformat" },
+            nix = { "nixfmt" },
+            elixir = { "mix" },
+            hcl = { "hcl" },
             javascript = { "biome-check" },
         }
-        local formatters_to_install = {}
-        for fm, v in pairs(formatters) do
-            if v.auto_install ~= false then
-                table.insert(formatters_to_install, fm)
-            end
-            for _, ft in ipairs(v.ft) do
-                if formatters_by_ft[ft] == nil then
-                    formatters_by_ft[ft] = {}
-                end
-                table.insert(formatters_by_ft[ft], fm)
-            end
-        end
-
         local conform = require("conform")
         conform.setup({})
         conform.formatters_by_ft = formatters_by_ft
-        require("mason-tool-installer").setup({ ensure_installed = formatters_to_install })
 
         conform.formatters["shfmt"] = {
             prepend_args = { "--case-indent" },
         }
-
         conform.formatters["stylua"] = {
             prepend_args = { "--indent-type=Spaces" },
         }
