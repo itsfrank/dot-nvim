@@ -15,7 +15,14 @@ return {
 
         vim.lsp.config("*", {
             capabilities = require("blink.cmp").get_lsp_capabilities(),
-            on_attach = require("frank.lsp-on-attach"),
+        })
+
+        vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(args)
+                local bufnr = args.buf
+                local client = vim.lsp.get_client_by_id(args.data.client_id)
+                require("frank.lsp-on-attach")(client, bufnr)
+            end,
         })
 
         vim.lsp.enable("lua_ls")
