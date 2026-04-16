@@ -36,8 +36,8 @@ vim.cmd.colorscheme("rose-pine")
 -- vim.cmd.colorscheme("oxocarbon")
 
 -- override cursor line nr so its the same color as other colors, otherwise with cursorline its distracting
-local line_nr_color = vim.api.nvim_get_hl_by_name("LineNr", true)
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = line_nr_color.foreground })
+local line_nr_color = vim.api.nvim_get_hl(0, { name = "LineNr", link = false })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = line_nr_color.fg })
 
 -- from primeagen
 vim.opt.nu = true
