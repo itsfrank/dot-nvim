@@ -14,7 +14,7 @@ return function(client, bufnr)
         return ":IncRename " .. vim.fn.expand("<cword>")
     end, { expr = true })
 
-    keymap_set({ "n", "v" }, "<leader>ca", require("fastaction").code_action, "[C]ode [A]ction")
+    -- keymap_set({ "n", "v" }, "<leader>ca", require("fastaction").code_action, "[C]ode [A]ction")
 
     keymap_set("n", "gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
     keymap_set("n", "gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
