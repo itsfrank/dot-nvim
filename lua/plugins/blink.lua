@@ -44,7 +44,7 @@ return {
         -- Default list of enabled providers defined so that you can extend it
         -- elsewhere in your config, without redefining it, due to `opts_extend`
         sources = {
-            default = { "lazydev", "lsp", "path", "snippets", "buffer", "foundation_tags" },
+            default = { "lazydev", "lsp", "path", "snippets", "buffer"},
             providers = {
                 lazydev = {
                     name = "LazyDev",
@@ -56,10 +56,6 @@ return {
                     opts = {
                         enable_in_ex_commands = true,
                     },
-                },
-                foundation_tags = {
-                    name = "Foundation",
-                    module = "rbx-luau.foundation-blink",
                 },
             },
         },
