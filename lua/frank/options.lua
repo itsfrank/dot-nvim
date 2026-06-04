@@ -28,7 +28,8 @@ vim.wo.signcolumn = "yes"
 vim.o.termguicolors = true
 vim.opt.background = "dark"
 
-vim.cmd.colorscheme("rose-pine")
+vim.cmd.colorscheme("carbonfox")
+-- vim.cmd.colorscheme("rose-pine")
 -- vim.cmd.colorscheme("rose-pine-dawn")
 -- vim.cmd.colorscheme("cyberdream")
 -- vim.cmd.colorscheme("catppuccin")
