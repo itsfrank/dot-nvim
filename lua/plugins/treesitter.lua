@@ -1,16 +1,12 @@
-if vim.fn.executable("tree-sitter") ~= 1 then
-    vim.notify("tree-sitter CLI is not installed; skipping nvim-treesitter setup", vim.log.levels.WARN)
-    return {}
-end
-
 return {
     {
-        "romus204/tree-sitter-manager.nvim",
-        dependencies = {}, -- tree-sitter CLI must be installed system-wide
+        "nvim-treesitter/nvim-treesitter",
+        branch = "main",
+        lazy = false,
+        build = ":TSUpdate",
         config = function()
-            require("tree-sitter-manager").setup({
-                -- Default Options
-                ensure_installed = {
+            if vim.fn.executable("tree-sitter") == 1 then
+                require("nvim-treesitter").install({
                     "c",
                     "cpp",
                     "go",
@@ -27,12 +23,22 @@ return {
                     "vim",
                     "vimdoc",
                     "yaml",
-                },
+                })
+            else
+                vim.notify("tree-sitter CLI is not installed; skipping parser installation", vim.log.levels.WARN)
+            end
+
+            vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("FrankTreesitterStart", { clear = true }),
+                callback = function(args)
+                    pcall(vim.treesitter.start, args.buf)
+                end,
             })
         end,
     },
     {
         "nvim-treesitter/nvim-treesitter-context",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
         config = function()
             require("treesitter-context").setup({
                 max_lines = 2, -- How many lines the window should span. Values <= 0 mean no limit.
@@ -42,6 +48,7 @@ return {
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
         branch = "main",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
         config = function()
             require("nvim-treesitter-textobjects").setup({
                 select = {
