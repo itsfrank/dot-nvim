@@ -18,36 +18,4 @@ return {
             })
         end,
     },
-    {
-        -- fancy colors meow!
-        "catppuccin/nvim",
-        as = "catppuccin",
-        priority = 1000,
-    },
-    {
-        "nyoom-engineering/oxocarbon.nvim",
-        as = "oxocarbon",
-        priority = 1000,
-    },
-    {
-        "ribru17/bamboo.nvim",
-        priority = 1000,
-        config = function()
-            require("bamboo").setup({})
-        end,
-    },
-    {
-        "scottmckendry/cyberdream.nvim",
-        lazy = false,
-        priority = 1000,
-        config = function()
-            require("cyberdream").setup({
-                -- Recommended - see "Configuring" below for more config options
-                transparent = true,
-                italic_comments = true,
-                hide_fillchars = true,
-                terminal_colors = true,
-            })
-        end,
-    },
 }
