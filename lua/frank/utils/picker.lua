@@ -1,36 +1,7 @@
 -- this is a basic wrapper around snacks.picker that makes it synchronous from a coroutine
 -- you probably can't do 100% of that snack.picker offers wrt actions, but it's god enough for me for now
 
-local async = require("frank.utils.async")
-local picker = require("snacks.picker")
-
 local M = {}
-
---- Pick async, must be called from a coroutine or async.block
----@param opts_in snacks.picker.Config
-function M.pick_async(opts_in)
-    ---@diagnostic disable: redefined-local
-    local function pick_cb(opts_in, cb)
-        local picked = nil
-        local opts = vim.deepcopy(opts_in)
-        opts.confirm = function(picker, item)
-            picked = item
-            if opts_in.confirm then
-                opts_in.confirm(picker, item)
-            end
-            picker:close()
-        end
-        opts.on_close = function(picker)
-            if opts_in.on_close then
-                opts_in.on_close(picker)
-            end
-            cb(picked)
-        end
-        picker.pick(opts)
-    end
-
-    return async.wrap(pick_cb)(opts_in)
-end
 
 function M.fuzzy_oil()
     local find_command = {
