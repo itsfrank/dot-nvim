@@ -16,6 +16,7 @@ return {
             python = { "black" },
             rust = { "rustfmt" },
             sh = { "shfmt" },
+            zsh = { "shfmt" },
             yaml = { "yamlfmt" },
             ocaml = { "ocamlformat" },
             nix = { "nixfmt" },
@@ -27,9 +28,13 @@ return {
         conform.setup({})
         conform.formatters_by_ft = formatters_by_ft
 
-        conform.formatters["shfmt"] = {
-            prepend_args = { "--case-indent" },
-        }
+        conform.formatters["shfmt"] = function(bufnr)
+            local args = { "--case-indent" }
+            if vim.bo[bufnr].filetype == "zsh" then
+                table.insert(args, "--language-dialect=zsh")
+            end
+            return { prepend_args = args }
+        end
         conform.formatters["stylua"] = {
             prepend_args = { "--indent-type=Spaces" },
         }
